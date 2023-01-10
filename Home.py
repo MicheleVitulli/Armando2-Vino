@@ -24,6 +24,7 @@ st.markdown('## 🍷🍷🍷')
 
 def foo():
     st.write('ciao')
+    st.success('daje')
     return
 
 b = st.button('premi')
