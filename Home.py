@@ -22,14 +22,6 @@ st.markdown('## 🍷🍷🍷')
 st.markdown('# Versione per Le Bon Ton')
 st.markdown('## 🍷🍷🍷')
 
-def foo():
-    st.write('ciao')
-    st.success('daje')
-    return
-
-b = st.button('premi')
-if b:
-    foo()
 
 
 st.markdown('> 🦈 ⚪️')
