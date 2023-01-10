@@ -113,6 +113,44 @@ for doc in docs2:
 chart_newdata2 = pd.DataFrame(new_data2)
 st.bar_chart(chart_newdata2, x='prodotti', y='ricavi')
 
+# --- GRAFICO DEI GUADAGNI ---
+# grafico molto simile al precedente
+
+st.markdown('# <span style="color: #983C8E;">Grafico dei guadagni</span>', unsafe_allow_html=True)
+
+doc_ref2 = db.collection("vendite")
+docs2 = doc_ref.stream()
+
+# creo il dizonario, che chiamo new_data2 per evitare collisioni con il precedente
+# anche molti prossime variabili avranno la dicitura "2"
+new_data2 = {'prodotti': [], 'guadagni': []}
+for doc in docs2:
+	nome = doc.to_dict()['nome']
+	guadagno = doc.to_dict()['guadagno']
+	data = doc.to_dict()['data']
+	mese = data.split('-')[1]
+	anno = data.split('-')[0]
+
+	
+	if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno):
+		if not nome in new_data2['prodotti']:
+			# aggiungo prodotto e ricavo
+			new_data2['prodotti'].append(nome)
+			new_data2['guadagni'].append(guadagno)
+		else:
+			# altrimenti aggiorno il volume dei ricavi
+			pos = 0
+			for i in range(len(new_data2['prodotti'])):
+				if nome == new_data2['prodotti'][i]:
+					pos = i
+			temp = new_data2['guadagni'][pos]
+			new_guadagno = temp + guadagno
+			new_data2['guadagni'][pos] = new_guadagno
+
+# creo il chart con pandas e poi lo disegno con st.bar_chart
+chart_newdata2 = pd.DataFrame(new_data2)
+st.bar_chart(chart_newdata2, x='prodotti', y='guadagni')
+
 
 
 

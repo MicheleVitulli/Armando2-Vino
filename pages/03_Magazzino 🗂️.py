@@ -27,7 +27,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown('📦 Armando 2.0')
 
 # --- Prelievo dei dati dal database per poi creare la tabella ---
-doc_ref = db.collection("prodotti")
+doc_ref = db.collection("vini")
 
 st.markdown('# <span style="color: #983C8E;">Gestione Magazzino</span>', unsafe_allow_html=True)
 docs = doc_ref.stream()
@@ -35,29 +35,15 @@ docs = doc_ref.stream()
 # questo è l'array di dizionari che conterrà tutti i prodotti
 prodotti = []
 for doc in docs:
-	current_date = datetime.now().strftime("%Y-%m-%d")
-	prod_date = datetime.strptime(doc.to_dict()['scadenza'], "%Y-%m-%d")- timedelta(days=doc.to_dict()['delta_scadenza']+1)
-	prod_date = prod_date.strftime("%Y-%m-%d")
-
-	# seleziono il giusto segnalino in base alla scadenza
-	if current_date >= doc.to_dict()['scadenza']:
-		stato = '⛔ ' + 'Scaduto' 
-	elif current_date > prod_date:
-		stato = '⚠️ '+'In scadenza' 
-	else:
-		stato = '✅ '+'In stock'
 
 	if doc.to_dict()['quant'] != 0:
 		quant = doc.to_dict()['quant']
-		scad = doc.to_dict()['scadenza']
 	# e in base alla quantià residua
 	else:
 		quant = '⛔ ' + 'Esaurito'
-		scad = ''
-		stato = ''
 
 	# creo il dizionario parziale e lo aggiungo all'array ( di dizionari ) prodotti
-	prodotti_dict = {"Nome": doc.to_dict()['nome'], "Prezzo €" : doc.to_dict()['prezzo'], "Quantità": quant, "Scadenza": scad, "Stato": stato} 
+	prodotti_dict = {"Nome": doc.to_dict()['nome'], "Prezzo privato" : doc.to_dict()['prezzo_vp'], "Prezzo grossista" : doc.to_dict()['prezzo_vg'], "Prezzo di acquiesto" : doc.to_dict()['prezzo_a'], "Quantità": quant, "Annata": doc.to_dict()['annata']} 
 	prodotti.append(prodotti_dict)
 
 
@@ -78,61 +64,49 @@ if prodotti != []:
 	selected = table['selected_rows']
 
 	# divido la pagina in tre colonne per aggiungere i bottoni
-	col1, col2, col3 = st.columns(3)
+	col1, col2 = st.columns(2)
 
 
 	# --- INIZIO BOTTONI ---
 	elimina_selezionati = col1.button('Elimina selezionati')
 	if elimina_selezionati:
 		if selected == []:
-			st.warning('⚠️ Seleziona almeno un prodotto')
+			st.warning('⚠️ Seleziona almeno un vino')
 		else:
 			for dictionary in selected:
-				nome_d = dictionary['Nome'] + dictionary['Scadenza']
-				db.collection(u'prodotti').document(nome_d).delete()
+				nome_d = dictionary['Nome'] + dictionary['Annata']
+				db.collection(u'vini').document(nome_d).delete()
 			st.success(f'Eliminazione avvenuta')
 			time.sleep(1)
 			st.experimental_rerun()
 
 	elimina_esauriti = col2.button('Elimina esauriti')
 	if elimina_esauriti:
-		query = db.collection(u'prodotti').where(u'quant', u'==', 0)
+		query = db.collection(u'vini').where(u'quant', u'==', 0)
 		docs = query.stream()
 		for doc in docs:
-			db.collection(u'prodotti').document(doc.id).delete()
+			db.collection(u'vini').document(doc.id).delete()
 		st.success(f'Hai eliminato i prodotti esauriti')
 		time.sleep(1)
 		st.experimental_rerun()
 
-	elimina_scaduti = col3.button('Elimina scaduti')
-	if elimina_scaduti:
-		current_date = datetime.now().strftime("%Y-%m-%d")
-		query = db.collection(u'prodotti').where(u'scadenza', u'<=', current_date)
-		docs = query.stream()
-		for doc in docs:
-			db.collection(u'prodotti').document(doc.id).delete()
-		st.success(f'Hai eliminato i prodotti scaduti')
-		time.sleep(1)
-		st.experimental_rerun()
 	# --- FINE BOTTONI --- 
 
 	st.markdown('---')
 	# suddivido in due colonne per aggiungere la funzione di aggionra quantità
-	nc1, nc2 = st.columns([1,4])
-	aggiorna_quant = nc1.button('Aggiorna quantità')
-	new_quant = nc2.number_input('Inserisci nuova quantità', step=1, min_value=0)
+	new_quant = st.number_input('Inserisci nuova quantità', step=1, min_value=0)
+	aggiorna_quant = st.button('Aggiorna quantità')
+	
 	if aggiorna_quant:
 		if selected == []:
-			st.warning('⚠️ Seleziona almeno un prodotto')
+			st.warning('⚠️ Seleziona almeno un vino')
 		else:
 			for dictionary in selected:
-				nome_d = dictionary['Nome'] + dictionary['Scadenza']
-				db.collection(u'prodotti').document(nome_d).set({
-					'nome': doc.to_dict()['nome'],
+				nome_d = dictionary['Nome'] + dictionary['Annata']
+				db.collection(u'vini').document(nome_d).update({
+					
 					'quant': new_quant,
-					'scadenza': doc.to_dict()['scadenza'],
-					'delta_scadenza': doc.to_dict()['delta_scadenza'],
-					'prezzo': doc.to_dict()['prezzo'],
+					
 				})
 				nome_a = doc.to_dict()['nome']
 
@@ -141,7 +115,7 @@ if prodotti != []:
 			st.experimental_rerun()
 else:
 	# visualizzo questo se non sono presenti prodotti nel magazzino
-	st.markdown('### Non sono presenti prodotti in magazzino')
+	st.markdown('### Non sono presenti vini in magazzino')
 
 
 
