@@ -67,8 +67,10 @@ with tab2:
   ordini = []
   for doc in docs:
     # st.write(doc.to_dict())
-    ordini_dict = {'Nome ordine': doc.to_dict()['nome ordine'], 'Vini ordinati': doc.to_dict()['ordinato']}
-    ordini.append(ordini_dict)
+    ordinato = doc.to_dict()['ordinato']
+    for i in ordinato:
+      ordini_dict = {'Nome ordine': doc.to_dict()['nome ordine'], 'Vini ordinati': i, 'Quantità':ordinato[i]}
+      ordini.append(ordini_dict)
 
   if ordini != []:
     data = pd.DataFrame(ordini)
