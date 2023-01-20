@@ -69,7 +69,7 @@ with tab2:
     # st.write(doc.to_dict())
     ordinato = doc.to_dict()['ordinato']
     for i in ordinato:
-      ordini_dict = {'Nome ordine': doc.to_dict()['nome ordine'], 'Vini ordinati': i, 'Quantità':ordinato[i]}
+      ordini_dict = {'Nome ordine': doc.to_dict()['nome ordine'], 'Vini ordinati': i, 'Quantità': ordinato[i]}
       ordini.append(ordini_dict)
 
   if ordini != []:
@@ -81,3 +81,47 @@ with tab2:
 
 
     table = AgGrid(data, gridOptions=gridOptions, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=True)
+
+  # selected contiene le righe selezionate tramite checkbox
+    selected = table['selected_rows']
+
+    # divido la pagina in tre colonne per aggiungere i bottoni
+    col1, col2 = st.columns(2)
+
+
+    # --- INIZIO BOTTONI ---
+    elimina_selezionati = col1.button('Elimina selezionati')
+    if elimina_selezionati:
+      if selected == []:
+        st.warning('⚠️ Seleziona almeno un ordine')
+      else:
+        for dictionary in selected:
+          db.collection(u'vini').document(dictionary.id).delete()
+        st.success(f'Eliminazione avvenuta')
+        time.sleep(1)
+        # st.experimental_rerun()
+
+    q_reso = col2.number_input('Aggiorna reso bottiglie', min_value=0)
+    aggiorna_reso = col2.button('Aggiorna il reso in magazzino')
+
+    if aggiorna_reso:
+      if selected == []:
+        st.warning('⚠️ Seleziona almeno un vino')
+		  else:
+        for dictionary in selected:
+        db.collection(u'vini').document(nome_d).update({'quant': new_quant,})
+        nome_a = doc.to_dict()['nome']
+        # st.success(f'Hai aggiornato a {new_quant} {nome_a}')
+        time.sleep(1)
+        st.experimental_rerun()
+
+    # for dictionary in selected:
+    #   vino_id = dictionary['Vini ordinati']
+    #   q_reso = col2.number_input('Aggiorna reso bottiglie', min_value=0, max_value=dictionary['Quantità'])
+    #   aggiorna_reso = col2.button
+      
+
+    #   st.success(f'Hai eliminato i prodotti esauriti')
+    #   time.sleep(1)
+      # st.experimental_rerun()
+      
