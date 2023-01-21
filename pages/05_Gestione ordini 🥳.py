@@ -84,8 +84,9 @@ with tab1:
       if double >= 2:
         for arr in double_prodotti:
           ann_prodotti.append(arr[1])
-      
-        option_double = st.selectbox('Seleziona l\'annata', ann_prodotti)
+
+        # st.markdown(f'Sono presenti diversi annata in magazzinno per <span style="color: #983C8E;">{vino}</span>')
+        option_double = st.selectbox(f'Seleziona l\'annata', ann_prodotti)
 
       
         for arr in double_prodotti:
@@ -160,6 +161,7 @@ with tab2:
     #   q_reso = col2.number_input('Quantotà da rendere del vino selezionato', min_value=0, step=1)
     # effettua_reso = col2.button('Effettua reso vini selezionati')
     # if effettua_reso:
+    #   quer
     #   db.collection(u'vini').document(vino_id).update({'quant': q_iniziale - q_evento})
 
     #   db.collection(u'resi').document()
