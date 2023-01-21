@@ -30,7 +30,23 @@ st.markdown('# <span style="color: #983C8E;">Gestione Ordini per ricevimenti</sp
 tab1, tab2 = st.tabs(['Gestione degli ordini', 'Gestione dei resi'])
 
 with tab1:
-  #Creo la collection relativa agli ordini per feste e ricevimenti
+
+#     # --- INIZIO BOTTONI ---
+#     elimina_selezionati = col1.button('Elimina selezionati')
+#     if elimina_selezionati:
+#       if selected == []:
+#         st.warning('⚠️ Seleziona almeno un ordine')
+#       else:
+#         for dictionary in selected:
+#           db.collection(u'vini').document(dictionary.id).delete()
+#         st.success(f'Eliminazione avvenuta')
+#         time.sleep(1)
+#         # st.experimental_rerun()
+
+#     q_reso = col2.number_input('Aggiorna reso bottiglie', min_value=0)
+#     aggiorna_reso = col2.button('Aggiorna il reso in magazzino')
+
+########################################################################################################################################à
   docs = db.collection(u'vini').stream()
   prodotti = ['']
   for doc in docs:
@@ -38,27 +54,71 @@ with tab1:
       if doc.to_dict()['nome'] not in prodotti:
         prodotti.append(doc.to_dict()['nome'])
 
+  #informazioni evento
+  ord_nome = st.text_input('Inserisci nome evento')
+  ord_data = st.date_input('Inserisci data evento', value=datetime.now())
 
-  ord_nome = st.text_input('Nome dell\'ordine')
-  ord_data = st.date_input('Data ricevimento ordine')
+  #codice identificativo per ogni singolo evento
   ord_id = ord_nome + str(ord_data)
-  vino_id = st.multiselect('Che vino prendi?', prodotti)
 
-  vino_q = {}
-  for k in range(len(vino_id)):
-    vino_quan = st.number_input('Quante bottiglie di {}'.format(vino_id[k]), key=str(vino_id[k]), step=1, min_value=0)
-    vino_q[vino_id[k]] = vino_quan 
+  #informazioni relative ai vini che si vogliono prendere per l'evento
+  option = st.multiselect('Seleziona i vini', prodotti)
 
 
-  if st.button('Invia ordine per ricevimento'):
-      db.collection('ordini').document(ord_id).set({
+  # --- Selezione del prodotto ---
+  dict_vino = {}
+  if option and option != '':
+    for vino in option:
+      query = db.collection(u'vini').where(u'nome', u'==', vino)
+      docs = query.stream()
+      double_prodotti = []
+      double = 0
+      for doc in docs:
+        arr = [doc.id, doc.to_dict()['annata'], doc.to_dict()['quant'], doc.to_dict()['prezzo_vp'], doc.to_dict()['prezzo_a'], doc.to_dict()['prezzo_vg']]
+        double_prodotti.append(arr)
+        double += 1 
+
+      ann_prodotti = []
+      target_arr = []
+    
+      if double >= 2:
+        for arr in double_prodotti:
+          ann_prodotti.append(arr[1])
+      
+        option_double = st.selectbox('Seleziona l\'annata', ann_prodotti)
+
+      
+        for arr in double_prodotti:
+          if option_double in arr:
+            target_arr = arr
+            break
+
+      else:
+        target_arr = double_prodotti[0]
+
+      q_vino = st.number_input('Quante bottiglie di {}'.format(vino), key=str(vino), step=1, min_value=0)
+
+      dict_vino[vino]=[target_arr[1], target_arr[2], q_vino]
+    
+
+  ordine = st.button('Registra ordine per ricevimento')
+
+  if ordine and option!=[]:
+    db.collection(u'ordini').document(ord_id).set({
       'nome ordine': ord_nome,
       'data evento': str(ord_data),
-      'ordinato': vino_q
+      'ordinato': dict_vino
       })
+    
+    for i in dict_vino:
+      q_iniziale = dict_vino[i][1]
+      q_evento = dict_vino[i][2]
+      vino_id = i+dict_vino[i][0]
 
-      st.success('Ordine per ricevimento registrato')
-      time.sleep(1)
+      db.collection(u'vini').document(vino_id).update({'quant': q_iniziale - q_evento})
+
+    st.success('Ordine registrato con successo')
+    time.sleep(1)
 
 with tab2:
   doc_ref = db.collection('ordini')
@@ -66,10 +126,9 @@ with tab2:
 
   ordini = []
   for doc in docs:
-    # st.write(doc.to_dict())
     ordinato = doc.to_dict()['ordinato']
     for i in ordinato:
-      ordini_dict = {'Nome ordine': doc.to_dict()['nome ordine'], 'Vini ordinati': i, 'Quantità': ordinato[i]}
+      ordini_dict = {'Nome ordine': doc.to_dict()['nome ordine'], 'Vini ordinati': i, 'Quantità': ordinato[i][2]}
       ordini.append(ordini_dict)
 
   if ordini != []:
@@ -82,46 +141,25 @@ with tab2:
 
     table = AgGrid(data, gridOptions=gridOptions, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=True)
 
-  # selected contiene le righe selezionate tramite checkbox
     selected = table['selected_rows']
 
-    # divido la pagina in tre colonne per aggiungere i bottoni
     col1, col2 = st.columns(2)
 
-
-    # --- INIZIO BOTTONI ---
     elimina_selezionati = col1.button('Elimina selezionati')
     if elimina_selezionati:
       if selected == []:
         st.warning('⚠️ Seleziona almeno un ordine')
       else:
         for dictionary in selected:
-          db.collection(u'vini').document(dictionary.id).delete()
+          db.collection(u'ordini').document(dictionary.id).delete()
         st.success(f'Eliminazione avvenuta')
         time.sleep(1)
-        # st.experimental_rerun()
 
-    q_reso = col2.number_input('Aggiorna reso bottiglie', min_value=0)
-    aggiorna_reso = col2.button('Aggiorna il reso in magazzino')
-
-    if aggiorna_reso:
-      if selected == []:
-        st.warning('⚠️ Seleziona almeno un vino')
-		  else:
-        for dictionary in selected:
-        db.collection(u'vini').document(nome_d).update({'quant': new_quant,})
-        nome_a = doc.to_dict()['nome']
-        # st.success(f'Hai aggiornato a {new_quant} {nome_a}')
-        time.sleep(1)
-        st.experimental_rerun()
 
     # for dictionary in selected:
-    #   vino_id = dictionary['Vini ordinati']
-    #   q_reso = col2.number_input('Aggiorna reso bottiglie', min_value=0, max_value=dictionary['Quantità'])
-    #   aggiorna_reso = col2.button
-      
+    #   q_reso = col2.number_input('Quantotà da rendere del vino selezionato', min_value=0, step=1)
+    # effettua_reso = col2.button('Effettua reso vini selezionati')
+    # if effettua_reso:
+    #   db.collection(u'vini').document(vino_id).update({'quant': q_iniziale - q_evento})
 
-    #   st.success(f'Hai eliminato i prodotti esauriti')
-    #   time.sleep(1)
-      # st.experimental_rerun()
-      
+    #   db.collection(u'resi').document()
