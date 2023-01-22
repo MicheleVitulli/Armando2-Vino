@@ -71,8 +71,9 @@ if option and option != '':
 	# --- Vendita del prodotto ---
 	if vendi and quant_vendita!=0 and quant_vendita<=quant:
 		
-		# aggiorno il prodotto con la nuova quantità attuale 
-		db.collection(u'vini').document(target_arr[0]).update({
+		# aggiorno il prodotto con la nuova quantità attuale
+		id_prodotto = nome + ' ' + annata 
+		db.collection(u'vini').document(id_prodotto).update({
 
 		'quant': quant - quant_vendita,
 		})
