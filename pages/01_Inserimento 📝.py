@@ -43,7 +43,7 @@ query = db.collection(u'vini').where(u'nome', u'==', prod_nome).where('annata', 
 docs = query.stream()
 for doc in docs:
 	try:
- 		old_prod_quant = doc.to_dict()['quant']
+		old_prod_quant = doc.to_dict()['quant']
  	except:
 		old_prod_quant = 0
 	
