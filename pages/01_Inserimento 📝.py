@@ -44,7 +44,7 @@ docs = query.stream()
 for doc in docs:
 	try:
 		old_prod_quant = doc.to_dict()['quant']
- 	except:
+	except:
 		old_prod_quant = 0
 	
 
