@@ -29,7 +29,7 @@ docs = db.collection(u'vini').stream()
 prodotti = ['']
 for doc in docs:
 	if doc.to_dict()['quant'] != 0:
-		# crea un array di nomi prelevandoli dal database evitando duplicati
+		# crea un array di nomi (non sono presenti duplicati)
 		prodotti.append(doc.id)
 st.markdown('# <span style="color: #983C8E;">Vendi i vini</span>', unsafe_allow_html=True)
 option = st.selectbox('Seleziona il vino', prodotti)
@@ -38,6 +38,7 @@ if option:
 
 
 # --- Selezione del prodotto ---
+# tramite l'array info, estraggo il nome e l'annata del vino 
 if option and option != '':
 	info = option.split('-')
 	query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
@@ -63,7 +64,6 @@ if option and option != '':
 
 	# seleziono quantità da vendere
 	quant_vendita = st.number_input('Quantità da vendere', step=1, min_value=0, max_value=quant)
-	#st.write(f'Il ricavo è di {float(quant_vendita) * float(vendita)} euro')
 
 	vendi = st.button('Vendi')
 

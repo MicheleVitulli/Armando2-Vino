@@ -38,7 +38,7 @@ prod_prezzo_ac = st.number_input('Prezzo di acquisto', min_value=0.00)
 soglia = st.number_input('Soglia di avvertimento', min_value=0, step=1)
 
 
-
+# --- controllo se è presente una quantità precedente ---
 query = db.collection(u'vini').where(u'nome', u'==', prod_nome).where('annata', '==', prod_ann)
 docs = query.stream()
 old_prod_quant = 0
@@ -47,15 +47,11 @@ for doc in docs:
 	
 	
 
-# controllo se il prodotto (con id) ha già una quantità residua di partenza
-# try:
-# 	old_prod_quant = doc.to_dict()['quant']
-# except:
-# 	old_prod_quant = 0
+
 
 # --- Aggiunta prodotto al database ---
 if st.button('Aggiungi'):
-	# l'id (chiave univoca) è il nome
+	# l'id (chiave univoca) 
 	prod_id = prod_nome + '-' + prod_ann
 
 	doc_ref = db.collection("vini").document(prod_id)
