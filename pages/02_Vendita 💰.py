@@ -40,7 +40,6 @@ if option:
 # --- Selezione del prodotto ---
 if option and option != '':
 	info = option.split(' ')
-	print(info)
 	query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
 	docs = query.stream()
 	for doc in docs:
@@ -52,7 +51,6 @@ if option and option != '':
 		quant = doc.to_dict()['quant']
 	
 	
-	print(nome, annata)
 	if option_ac == 'Grossista':
 		vendita = prezzo_vg
 	else:
@@ -65,13 +63,13 @@ if option and option != '':
 
 	# seleziono quantità da vendere
 	quant_vendita = st.number_input('Quantità da vendere', step=1, min_value=0, max_value=quant)
-	st.write(f'Il ricavo è di {float(quant_vendita) * float(vendita)} euro')
+	#st.write(f'Il ricavo è di {float(quant_vendita) * float(vendita)} euro')
 
 	vendi = st.button('Vendi')
 
 
 	# --- Vendita del prodotto ---
-	if vendi and quant_vendita!=0 and quant_vendita<=target_arr[2]:
+	if vendi and quant_vendita!=0 and quant_vendita<=quant:
 		
 		# aggiorno il prodotto con la nuova quantità attuale 
 		db.collection(u'vini').document(target_arr[0]).update({
