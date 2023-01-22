@@ -39,50 +39,31 @@ if option:
 
 # --- Selezione del prodotto ---
 if option and option != '':
-	query = db.collection(u'vini').where(u'nome', u'==', option)
+	info = option.split(' ')
+	query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
 	docs = query.stream()
-	# double e double_prodotti servono per verificare la presenza di nomi doppi
-	double_prodotti = []
-	double = 0
 	for doc in docs:
-		# questa è la forma dell'array che contiene i campi del prodotto
-		arr = [doc.id, doc.to_dict()['annata'], doc.to_dict()['quant'], doc.to_dict()['prezzo_vp'], doc.to_dict()['prezzo_a'], doc.to_dict()['prezzo_vg']]
-		double_prodotti.append(arr)
-		double += 1 
-
-	# ann_prodotti è una lista delle annate di prodotti con lo stesso nome
-	# target_arr è l'array che contiene i campi del prodotto che cerco
-	ann_prodotti = []
-	target_arr = []
-	# se double >= 2 allora ho due o più prodotti con lo stesso nome
-	if double >= 2:
-		for arr in double_prodotti:
-			ann_prodotti.append(arr[1])
-		# option_double mi permette di selezionare tramite data di scadenze
-		option_double = st.selectbox('Seleziona l\'annata', ann_prodotti)
-
-		# in questo ciclo seleziono l'array di riferimento in base alla data di scadenza presa in option_double
-		for arr in double_prodotti:
-			if option_double in arr:
-				target_arr = arr
-				break
-
-	# in questo caso double < 2, e quindi non ho elementi doppi
-	else:
-		target_arr = double_prodotti[0]
+		nome = doc.to_dict()['nome']
+		annata = doc.to_dict()['annata']
+		prezzo_vg = doc.to_dict()['prezzo_vg']
+		prezzo_a = doc.to_dict()['prezzo_a']
+		prezzo_vp = doc.to_dict()['prezzo_vp']
+		quant = doc.to_dict()['quant']
+	
+	
 
 	if option_ac == 'Grossista':
-		vendita = doc.to_dict()['prezzo_vg']
+		vendita = prezzo_vg
 	else:
-		vendita = doc.to_dict()['prezzo_vp']
+		vendita = prezzo_vp
 	
-	st.markdown(f'> Sono presenti <span style="color: #37519F;">{target_arr[2]}</span>  <span style="color: #983C8E;">{option}</span> del <span style="color: #37519F;">{target_arr[1]}</span> ', unsafe_allow_html=True)
+	st.markdown(f'> Sono presenti <span style="color: #37519F;">{quant}</span>  <span style="color: #983C8E;">{option}</span>', unsafe_allow_html=True)
 	st.markdown(f'> Il prezzo consigliato di vendita è {vendita} euro')
 	vendita= st.number_input('Vendi a questo prezzo', min_value=0.0, value=vendita)
 
 
 	# seleziono quantità da vendere
-	quant_vendita = st.number_input('Quantità da vendere', step=1, min_value=0, max_value=target_arr[2])
+	quant_vendita = st.number_input('Quantità da vendere', step=1, min_value=0, max_value=quant)
 	st.write(f'Il ricavo è di {float(quant_vendita) * float(vendita)} euro')
 
 	vendi = st.button('Vendi')
@@ -94,14 +75,14 @@ if option and option != '':
 		# aggiorno il prodotto con la nuova quantità attuale 
 		db.collection(u'vini').document(target_arr[0]).update({
 
-		'quant': target_arr[2] - quant_vendita,
+		'quant': quant - quant_vendita,
 		})
 		# aggiungo vendita e ricavo alla sezione vendite del database
 
 		db.collection(u'vendite').document().set({
 
-		'annata': target_arr[1],
-		'nome': doc.to_dict()['nome'],
+		'annata': annata,
+		'nome': nome,
 		'quant': quant_vendita,
 		'data': datetime.now().strftime("%Y-%m-%d"),
 		'ricavo' : float(quant_vendita) * float(vendita),
@@ -110,7 +91,6 @@ if option and option != '':
 		'acquirente': option_ac
 		})
 		
-		nome = doc.to_dict()['nome']
 		# time.sleep(1) serve a bloccare l'applicazione un secondo prima di runnarla nuovamente
 		# per permettere di visualizzare il messaggio di successo
 		st.success(f'Hai venduto con successo {quant_vendita} {nome}')
