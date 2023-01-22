@@ -43,7 +43,7 @@ for doc in docs:
 	else:
 		quant = '⚠️ ' + 'In esaurimento'
 	# creo il dizionario parziale e lo aggiungo all'array ( di dizionari ) prodotti
-	prodotti_dict = {"Nome": doc.to_dict()['nome'], "Prezzo privato" : doc.to_dict()['prezzo_vp'], "Prezzo grossista" : doc.to_dict()['prezzo_vg'], "Prezzo di acquiesto" : doc.to_dict()['prezzo_a'], "Quantità": quant, "Annata": doc.to_dict()['annata']} 
+	prodotti_dict = {"Nome": doc.to_dict()['nome'], "Annata": doc.to_dict()['annata'], "Prezzo privato" : doc.to_dict()['prezzo_vp'], "Prezzo grossista" : doc.to_dict()['prezzo_vg'], "Prezzo di acquiesto" : doc.to_dict()['prezzo_a'], "Quantità": quant} 
 	prodotti.append(prodotti_dict)
 
 
