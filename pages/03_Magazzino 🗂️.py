@@ -35,9 +35,8 @@ docs = doc_ref.stream()
 # questo è l'array di dizionari che conterrà tutti i prodotti
 prodotti = []
 for doc in docs:
-
-if doc.to_dict()['quant'] > doc.to_dict()['soglia']:
-	quant = doc.to_dict()['quant']
+	if doc.to_dict()['quant'] > doc.to_dict()['soglia']:
+		quant = doc.to_dict()['quant']
 	# e in base alla quantià residua
 	elif doc.to_dict()['quant'] <=0:
 		quant = '⛔ ' + 'Esaurito'
