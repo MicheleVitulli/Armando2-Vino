@@ -41,11 +41,10 @@ soglia = st.number_input('Soglia di avvertimento', min_value=0, step=1)
 
 query = db.collection(u'vini').where(u'nome', u'==', prod_nome).where('annata', '==', prod_ann)
 docs = query.stream()
+old_prod_quant = 0
 for doc in docs:
-	try:
-		old_prod_quant = doc.to_dict()['quant']
-	except:
-		old_prod_quant = 0
+	old_prod_quant = doc.to_dict()['quant']
+	
 	
 
 # controllo se il prodotto (con id) ha già una quantità residua di partenza
