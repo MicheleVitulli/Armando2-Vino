@@ -40,6 +40,7 @@ if option:
 # --- Selezione del prodotto ---
 if option and option != '':
 	info = option.split(' ')
+	print(info)
 	query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
 	docs = query.stream()
 	for doc in docs:
@@ -51,7 +52,7 @@ if option and option != '':
 		quant = doc.to_dict()['quant']
 	
 	
-
+	print(nome, annata)
 	if option_ac == 'Grossista':
 		vendita = prezzo_vg
 	else:
