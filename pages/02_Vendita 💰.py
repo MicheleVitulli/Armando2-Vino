@@ -39,7 +39,7 @@ if option:
 
 # --- Selezione del prodotto ---
 if option and option != '':
-	info = option.split(' ')
+	info = option.split('-')
 	query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
 	docs = query.stream()
 	for doc in docs:
@@ -72,7 +72,7 @@ if option and option != '':
 	if vendi and quant_vendita!=0 and quant_vendita<=quant:
 		
 		# aggiorno il prodotto con la nuova quantità attuale
-		id_prodotto = nome + ' ' + annata 
+		id_prodotto = nome + '-' + annata 
 		db.collection(u'vini').document(id_prodotto).update({
 
 		'quant': quant - quant_vendita,
