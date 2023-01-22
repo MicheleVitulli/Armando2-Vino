@@ -56,7 +56,7 @@ for doc in docs:
 # --- Aggiunta prodotto al database ---
 if st.button('Aggiungi'):
 	# l'id (chiave univoca) è il nome
-	prod_id = prod_nome + prod_ann
+	prod_id = prod_nome + ' ' + prod_ann
 
 	doc_ref = db.collection("vini").document(prod_id)
 	doc = doc_ref.get()

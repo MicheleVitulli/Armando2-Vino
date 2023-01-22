@@ -29,9 +29,8 @@ docs = db.collection(u'vini').stream()
 prodotti = ['']
 for doc in docs:
 	if doc.to_dict()['quant'] != 0:
-		if doc.to_dict()['nome'] not in prodotti:
-			# crea un array di nomi prelevandoli dal database evitando duplicati
-			prodotti.append(doc.to_dict()['nome'])
+		# crea un array di nomi prelevandoli dal database evitando duplicati
+		prodotti.append(doc.id)
 st.markdown('# <span style="color: #983C8E;">Vendi i vini</span>', unsafe_allow_html=True)
 option = st.selectbox('Seleziona il vino', prodotti)
 if option:
@@ -60,7 +59,7 @@ if option and option != '':
 		for arr in double_prodotti:
 			ann_prodotti.append(arr[1])
 		# option_double mi permette di selezionare tramite data di scadenze
-		option_double = st.selectbox('Seleziona la data di scadenza del prodotto', ann_prodotti)
+		option_double = st.selectbox('Seleziona l\'annata', ann_prodotti)
 
 		# in questo ciclo seleziono l'array di riferimento in base alla data di scadenza presa in option_double
 		for arr in double_prodotti:
