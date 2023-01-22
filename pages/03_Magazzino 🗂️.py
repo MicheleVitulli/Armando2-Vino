@@ -36,12 +36,13 @@ docs = doc_ref.stream()
 prodotti = []
 for doc in docs:
 
-	if doc.to_dict()['quant'] != 0:
+if doc.to_dict()['quant'] > doc.to_dict()['soglia']:
 		quant = doc.to_dict()['quant']
 	# e in base alla quantià residua
-	else:
+	elif doc.to_dict()['quant'] <=0:
 		quant = '⛔ ' + 'Esaurito'
-
+	else:
+		quant = '⚠️ ' + 'In esaurimento'
 	# creo il dizionario parziale e lo aggiungo all'array ( di dizionari ) prodotti
 	prodotti_dict = {"Nome": doc.to_dict()['nome'], "Prezzo privato" : doc.to_dict()['prezzo_vp'], "Prezzo grossista" : doc.to_dict()['prezzo_vg'], "Prezzo di acquiesto" : doc.to_dict()['prezzo_a'], "Quantità": quant, "Annata": doc.to_dict()['annata']} 
 	prodotti.append(prodotti_dict)
