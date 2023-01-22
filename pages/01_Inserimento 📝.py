@@ -35,16 +35,24 @@ prod_quant = st.number_input('Quantità', step=1, min_value=1, value=1)
 prod_prezzo_p = st.number_input('Prezzo di vendita al privato', min_value=0.00)
 prod_prezzo_g = st.number_input('Prezzo di vendita al grossista', min_value=0.00)
 prod_prezzo_ac = st.number_input('Prezzo di acquisto', min_value=0.00)
+soglia = st.number_input('Soglia di avvertimento', min_value=0, step=1)
 
 
 
-
+query = db.collection(u'vini').where(u'nome', u'==', prod_nome).where('annata', '==', prod_ann)
+docs = query.stream()
+for doc in docs:
+	try:
+ 		old_prod_quant = doc.to_dict()['quant']
+ 	except:
+		old_prod_quant = 0
+	
 
 # controllo se il prodotto (con id) ha già una quantità residua di partenza
-try:
-	old_prod_quant = doc.to_dict()['quant']
-except:
-	old_prod_quant = 0
+# try:
+# 	old_prod_quant = doc.to_dict()['quant']
+# except:
+# 	old_prod_quant = 0
 
 # --- Aggiunta prodotto al database ---
 if st.button('Aggiungi'):
@@ -63,7 +71,8 @@ if st.button('Aggiungi'):
 		'prezzo_vp' : prod_prezzo_p,
 		'prezzo_vg' : prod_prezzo_g,
 		'prezzo_a' : prod_prezzo_ac,
-		'annata': prod_ann 
+		'annata': prod_ann,
+		'soglia': soglia 
 
 	})
 		# time.sleep(1) serve a bloccare l'applicazione un secondo prima di runnarla nuovamente
