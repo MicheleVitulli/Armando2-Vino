@@ -102,7 +102,7 @@ with tab2:
 
     vini_ord = ''   
     for i in lista_vini:
-      vini_ord += str(i) + ' : ' + str(ordinato[i][0]) + ';  '
+      vini_ord += str(i) + ' = ' + str(ordinato[i][0]) + ';  '
 
 
     ordini.append({'Nome ordine': doc.to_dict()['nome ordine'], 'Data evento':doc.to_dict()['data evento'], 'Vini ordinati': vini_ord}) 
