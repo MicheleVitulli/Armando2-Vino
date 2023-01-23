@@ -31,25 +31,9 @@ tab1, tab2 = st.tabs(['Gestione degli ordini', 'Gestione dei resi'])
 
 with tab1:
 
-#     # --- INIZIO BOTTONI ---
-#     elimina_selezionati = col1.button('Elimina selezionati')
-#     if elimina_selezionati:
-#       if selected == []:
-#         st.warning('⚠️ Seleziona almeno un ordine')
-#       else:
-#         for dictionary in selected:
-#           db.collection(u'vini').document(dictionary.id).delete()
-#         st.success(f'Eliminazione avvenuta')
-#         time.sleep(1)
-#         # st.experimental_rerun()
-
-#     q_reso = col2.number_input('Aggiorna reso bottiglie', min_value=0)
-#     aggiorna_reso = col2.button('Aggiorna il reso in magazzino')
-
-########################################################################################################################################à
-  docs = db.collection(u'vini').stream()
+  docs_vini = db.collection(u'vini').stream()
   prodotti = ['']
-  for doc in docs:
+  for doc in docs_vini:
     if doc.to_dict()['quant'] != 0:
       if doc.to_dict()['nome'] not in prodotti:
         prodotti.append(doc.to_dict()['nome'])
@@ -99,8 +83,7 @@ with tab1:
 
       q_vino = st.number_input('Quante bottiglie di {}'.format(vino), key=str(vino), step=1, min_value=0)
 
-      dict_vino[vino]=[target_arr[1], target_arr[2], q_vino]
-    
+      dict_vino[target_arr[0]]=[target_arr[2], q_vino]
 
   ordine = st.button('Registra ordine per ricevimento')
 
@@ -112,25 +95,30 @@ with tab1:
       })
     
     for i in dict_vino:
-      q_iniziale = dict_vino[i][1]
-      q_evento = dict_vino[i][2]
-      vino_id = i+dict_vino[i][0]
+      q_iniziale = dict_vino[i][0]
+      q_evento = dict_vino[i][1]
 
-      db.collection(u'vini').document(vino_id).update({'quant': q_iniziale - q_evento})
+      db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
+
+      if q_evento > q_iniziale:
+        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a:', q_iniziale)
 
     st.success('Ordine registrato con successo')
-    time.sleep(1)
+    # time.sleep(1)
 
 with tab2:
-  doc_ref = db.collection('ordini')
-  docs = doc_ref.get()
+  docs_ordini = db.collection('ordini').stream()
 
   ordini = []
-  for doc in docs:
+  for doc in docs_ordini:
     ordinato = doc.to_dict()['ordinato']
+    vini_ord = ''
+
     for i in ordinato:
-      ordini_dict = {'Nome ordine': doc.to_dict()['nome ordine'], 'Vini ordinati': i, 'Quantità': ordinato[i][2]}
-      ordini.append(ordini_dict)
+      vini_ord += i + ' : ' + str(ordinato[i][1]) + '; \n' #bisognerebbe decidere se mettere anche l'annata ma si fa subito
+
+    ordini.append({'Nome ordine': doc.to_dict()['nome ordine'], 'Data evento':doc.to_dict()['data evento'], 'Vini ordinati': vini_ord}) 
+    # ordini.append(ordini_dict)
 
   if ordini != []:
     data = pd.DataFrame(ordini)
@@ -152,9 +140,74 @@ with tab2:
         st.warning('⚠️ Seleziona almeno un ordine')
       else:
         for dictionary in selected:
-          db.collection(u'ordini').document(dictionary.id).delete()
+          ord_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
+          db.collection(u'ordini').document(ord_id).delete()
         st.success(f'Eliminazione avvenuta')
         time.sleep(1)
+
+    
+
+    if len(selected) == 1:
+      reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
+
+      for doc in docs_ordini:
+        if reso_id == doc.id:
+          ordine = doc.to_dict()['ordinato']
+          prodotti = ordine.keys()
+
+      vino_reso = col2.selectbox('Scegli il prodotto da rendere', prodotti)
+
+      if vino_reso:
+        q_reso = col2.number_input('Quantità di reso', min_value=0, step=1)
+
+      aggiorna_reso = col2.button('Registra reso')
+      if aggiorna_reso:
+
+        query = db.collection(u'vini').where(u'nome', u'==', vino_reso)
+        docs = query.stream()
+
+        double_prodotti = []
+        double = 0
+
+        for doc in docs:
+          arr = [doc.id, doc.to_dict()['annata'], doc.to_dict()['quant']]
+          double_prodotti.append(arr)
+          double += 1 
+
+        ann_prodotti = []
+        target_arr = []
+    
+        if double >= 2:
+          for arr in double_prodotti:
+            ann_prodotti.append(arr[1])
+
+        # st.markdown(f'Sono presenti diversi annata in magazzinno per <span style="color: #983C8E;">{vino}</span>')
+          option_double = st.selectbox(f'Seleziona l\'annata', ann_prodotti)
+
+      
+          for arr in double_prodotti:
+            if option_double in arr:
+              target_arr = arr
+              break
+
+        else:
+          target_arr = double_prodotti[0]
+
+
+        vino_id = vino_reso + '-' + str(target_arr[1])
+        for doc in docs_vini:
+          if vino_reso == doc.id:
+            q_iniziale = doc.to_dict['quant']
+            db.collection(u'vini').document(doc.id).update({'quant': q_iniziale + q_reso})
+
+
+    
+    # else:
+    #   col2.warning('⚠️ Per aggiornare le quantità in magazzino seleziona solo un ordine')
+
+    # q_reso = col2.number_input('Quantità di reso', min_value=0, step=1)
+    # aggiorna_reso = col2.button('Registra reso')
+
 
 
     # for dictionary in selected:
