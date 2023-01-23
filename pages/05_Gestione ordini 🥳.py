@@ -29,6 +29,7 @@ st.markdown('# <span style="color: #983C8E;">Gestione Ordini per ricevimenti</sp
 
 tab1, tab2 = st.tabs(['Gestione degli ordini', 'Gestione dei resi'])
 
+
 with tab1:
 
   docs_vini = db.collection(u'vini').stream()
@@ -97,17 +98,19 @@ with tab2:
   ordini = []
   for doc in docs_ordini:
     ordinato = doc.to_dict()['ordinato']
-    vini_ord = ''
+    lista_vini = sorted(ordinato.keys())
 
-    for i in ordinato:
-      vini_ord += str(i) + ' : ' + str(ordinato[i]) + '; \n' 
+    vini_ord = ''   
+    for i in lista_vini:
+      vini_ord += str(i) + ' : ' + str(ordinato[i][0]) + ';  '
+
 
     ordini.append({'Nome ordine': doc.to_dict()['nome ordine'], 'Data evento':doc.to_dict()['data evento'], 'Vini ordinati': vini_ord}) 
 
   if ordini != []:
     data = pd.DataFrame(ordini)
     gd = GridOptionsBuilder.from_dataframe(data)
-    gd.configure_pagination(enabled=True, paginationAutoPageSize=True, paginationPageSize=6)
+    gd.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
     gd.configure_selection(selection_mode='single', use_checkbox=True)
     gridOptions = gd.build()
 
@@ -130,6 +133,7 @@ with tab2:
         time.sleep(1)
 
     
+    docs_ordini = db.collection('ordini').stream()
 
     if len(selected) == 1:
       reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
@@ -144,10 +148,12 @@ with tab2:
 
       dict_resi = {}
       for vino in vini_resi:
-        q_reso = col2.number_input('Quantità di reso', min_value=0, step=1)
+        q_reso = col2.number_input('Quantità di reso', min_value=0, step=1, key=vino)
         dict_resi[vino] = q_reso
 
       aggiorna_reso = col2.button('Registra reso')
+
+      docs_vini = db.collection(u'vini').stream()
 
       if aggiorna_reso:
         db.collection(u'resi_ordini').document(reso_id).set({
@@ -155,8 +161,8 @@ with tab2:
                                                       'reso': dict_resi})
         for vino in vini_resi:
           for doc in docs_vini:
-            if vino == doc.id: 
-              q_iniziale = doc.to_dict['quant']
+            if vino == doc.id:
+              q_iniziale = doc.to_dict()['quant']
               db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
 
         col2.success('Reso registrato con successo')
