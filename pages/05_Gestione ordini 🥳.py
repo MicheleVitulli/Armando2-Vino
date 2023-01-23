@@ -35,8 +35,7 @@ with tab1:
   prodotti = ['']
   for doc in docs_vini:
     if doc.to_dict()['quant'] != 0:
-      if doc.to_dict()['nome'] not in prodotti:
-        prodotti.append(doc.to_dict()['nome'])
+      prodotti.append(doc.id)
 
   #informazioni evento
   ord_nome = st.text_input('Inserisci nome evento')
@@ -53,56 +52,42 @@ with tab1:
   dict_vino = {}
   if option and option != '':
     for vino in option:
-      query = db.collection(u'vini').where(u'nome', u'==', vino)
+      info = vino.split('-')
+      query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
       docs = query.stream()
-      double_prodotti = []
-      double = 0
       for doc in docs:
-        arr = [doc.id, doc.to_dict()['annata'], doc.to_dict()['quant'], doc.to_dict()['prezzo_vp'], doc.to_dict()['prezzo_a'], doc.to_dict()['prezzo_vg']]
-        double_prodotti.append(arr)
-        double += 1 
-
-      ann_prodotti = []
-      target_arr = []
-    
-      if double >= 2:
-        for arr in double_prodotti:
-          ann_prodotti.append(arr[1])
-
-        # st.markdown(f'Sono presenti diversi annata in magazzinno per <span style="color: #983C8E;">{vino}</span>')
-        option_double = st.selectbox(f'Seleziona l\'annata', ann_prodotti)
-
-      
-        for arr in double_prodotti:
-          if option_double in arr:
-            target_arr = arr
-            break
-
-      else:
-        target_arr = double_prodotti[0]
+        nome = doc.to_dict()['nome']
+        annata = doc.to_dict()['annata']
+        prezzo_vg = doc.to_dict()['prezzo_vg']
+        prezzo_a = doc.to_dict()['prezzo_a']
+        prezzo_vp = doc.to_dict()['prezzo_vp']
+        quant = doc.to_dict()['quant']
 
       q_vino = st.number_input('Quante bottiglie di {}'.format(vino), key=str(vino), step=1, min_value=0)
 
-      dict_vino[target_arr[0]]=[target_arr[2], q_vino]
+      dict_vino[vino]=[quant, q_vino]
 
   ordine = st.button('Registra ordine per ricevimento')
 
   if ordine and option!=[]:
+
+    for i in dict_vino:
+      q_iniziale = dict_vino[i][0]
+      q_evento = dict_vino[i][1]
+
+      if q_evento > q_iniziale:
+        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a:', q_iniziale)
+
+      db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
+
+      dict_vino[i].remove(dict_vino[i][0])
+
     db.collection(u'ordini').document(ord_id).set({
       'nome ordine': ord_nome,
       'data evento': str(ord_data),
       'ordinato': dict_vino
       })
-    
-    for i in dict_vino:
-      q_iniziale = dict_vino[i][0]
-      q_evento = dict_vino[i][1]
-
-      db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
-
-      if q_evento > q_iniziale:
-        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a:', q_iniziale)
-
+      
     st.success('Ordine registrato con successo')
     # time.sleep(1)
 
@@ -115,7 +100,7 @@ with tab2:
     vini_ord = ''
 
     for i in ordinato:
-      vini_ord += i + ' : ' + str(ordinato[i][1]) + '; \n' #bisognerebbe decidere se mettere anche l'annata ma si fa subito
+      vini_ord += str(i) + ' : ' + str(ordinato[i][1]) + '; \n' #bisognerebbe decidere se mettere anche l'annata ma si fa subito
 
     ordini.append({'Nome ordine': doc.to_dict()['nome ordine'], 'Data evento':doc.to_dict()['data evento'], 'Vini ordinati': vini_ord}) 
     # ordini.append(ordini_dict)
