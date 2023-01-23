@@ -175,6 +175,7 @@ with tab2:
 
   resi = []
   for doc in docs_resi:
+    db.collection(u'resi_ordini').document(doc.id).delete()
     reso = doc.to_dict()['reso']
     st.write(reso)
     for i in dict_resi:
