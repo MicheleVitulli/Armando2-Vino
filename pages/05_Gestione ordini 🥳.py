@@ -176,6 +176,7 @@ with tab2:
   resi = []
   for doc in docs_resi:
     reso = doc.to_dict()['reso']
+    st.write(reso)
     for i in dict_resi:
       resi.append({"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Vino": i , "Quantità": dict_resi[i]}) 
 
