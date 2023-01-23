@@ -170,25 +170,26 @@ with tab2:
         col2.success('Reso registrato con successo')
 
 # --- Resi ---
-  doc_ref = db.collection(u"resi_ordini")
-  docs_resi = doc_ref.stream()
 
-  resi = []
-  for doc in docs_resi:
-    db.collection(u'resi_ordini').document(doc.id).delete()
-    reso = doc.to_dict()['reso']
-    st.write(reso)
-    for i in dict_resi:
-      resi.append({"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Vino": i , "Quantità": dict_resi[i]}) 
+  # doc_ref = db.collection(u"resi_ordini")
+  # docs_resi = doc_ref.stream()
 
-
-  if resi != []:
-    data2 = pd.DataFrame(resi)
-    gd2 = GridOptionsBuilder.from_dataframe(data2)
-    gd2.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
-    gridOptions2 = gd2.build()
+  # resi = []
+  # for doc in docs_resi:
+  #   db.collection(u'resi_ordini').document(doc.id).delete()
+  #   reso = doc.to_dict()['reso']
+  #   st.write(reso)
+  #   for i in dict_resi:
+  #     resi.append({"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Vino": i , "Quantità": dict_resi[i]}) 
 
 
-    table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
-  else:
-    st.write("Nessun reso registrato")
+  # if resi != []:
+  #   data2 = pd.DataFrame(resi)
+  #   gd2 = GridOptionsBuilder.from_dataframe(data2)
+  #   gd2.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
+  #   gridOptions2 = gd2.build()
+
+
+  #   table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
+  # else:
+  #   st.write("Nessun reso registrato")
