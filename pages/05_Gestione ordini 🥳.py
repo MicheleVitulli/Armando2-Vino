@@ -170,12 +170,12 @@ with tab2:
         col2.success('Reso registrato con successo')
 
 # --- Resi ---
-  doc_ref = db.collection("resi_ordini")
+  doc_ref = db.collection(u"resi_ordini")
   docs_resi = doc_ref.stream()
 
   resi = []
   for doc in docs_resi:
-    
+    reso = doc.to_dict()['reso']
     for i in dict_resi:
       resi.append({"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Vino": i , "Quantità": dict_resi[i]}) 
 
