@@ -131,6 +131,7 @@ with tab2:
           db.collection(u'ordini').document(ord_id).delete()
         st.success(f'Eliminazione avvenuta')
         time.sleep(1)
+        st.experimental_rerun()
 
     
     docs_ordini = db.collection('ordini').stream()
