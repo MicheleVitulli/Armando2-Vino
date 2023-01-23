@@ -137,7 +137,7 @@ with tab2:
     docs_ordini = db.collection('ordini').stream()
 
     if len(selected) == 1:
-      reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
+      reso_id = selected[0]['Nome ordine'] 
 
       for doc in docs_ordini:
         if reso_id == doc.id:
@@ -158,7 +158,8 @@ with tab2:
 
       if aggiorna_reso:
         db.collection(u'resi_ordini').document(reso_id).set({
-                                                      'nome reso': reso_id,
+                                                      'nome': reso_id,
+                                                      'data': str(datetime.now()),
                                                       'reso': dict_resi})
         for vino in vini_resi:
           for doc in docs_vini:
@@ -167,3 +168,25 @@ with tab2:
               db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
 
         col2.success('Reso registrato con successo')
+
+# --- Resi ---
+  doc_ref = db.collection("resi_ordini")
+  docs_resi = doc_ref.stream()
+
+  resi = []
+  for doc in docs_resi:
+    
+    for i in dict_resi:
+      resi.append({"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Vino": i , "Quantità": dict_resi[i]}) 
+
+
+  if resi != []:
+    data2 = pd.DataFrame(resi)
+    gd2 = GridOptionsBuilder.from_dataframe(data2)
+    gd2.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
+    gridOptions2 = gd2.build()
+
+
+    table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
+  else:
+    st.write("Nessun reso registrato")
