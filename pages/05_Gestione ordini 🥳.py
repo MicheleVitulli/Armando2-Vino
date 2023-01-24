@@ -190,8 +190,6 @@ with tab2:
     for i in reso:
       resi.append({"Ordine reso" : name_ord,"Data reso": date_ord,  "Vino": i , "Quantità": reso[i]}) 
 
-  st.write(resi)
-
 
   if resi != []:
     data2 = pd.DataFrame(resi)
