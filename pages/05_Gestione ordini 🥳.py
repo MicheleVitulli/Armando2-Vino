@@ -185,10 +185,12 @@ with tab2:
 
   resi = []
   for doc in docs_resi:
+    name_ord = doc.to_dict()['nome']
+    date_ord = doc.to_dict()['data']
     reso = doc.to_dict()['reso']
     reso = sorted(reso)
     for i in reso:
-      resi.append({"Ordine reso" : doc.to_dict()['nome'],"Data reso": doc.to_dict()['data'],  "Vino": i , "Quantità": reso[i]}) 
+      resi.append({"Ordine reso" : name_ord,"Data reso": date_ord,  "Vino": i , "Quantità": reso[i]}) 
 
 
   if resi != []:
