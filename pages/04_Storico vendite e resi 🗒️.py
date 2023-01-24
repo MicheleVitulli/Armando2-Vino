@@ -65,11 +65,14 @@ if prodotti != []:
 	if selected != []:
 		for d in selected:
 			max_quant = d['Quantità']
+			controllo_reso = 0
 			if d['Reso'] != '':
-				st.write('è già presente un reso')
-		aggiorna_quant = st.button('Effettua reso')
-		new_quant = st.number_input('Bottiglie restituite', step=1, min_value=0, max_value=max_quant)
-		if aggiorna_quant:
+				st.warning('Reso già effettuato', icon="⚠️")
+				controlo_reso = 1
+		if controllo_reso == 0:
+			aggiorna_quant = st.button('Effettua reso')
+			new_quant = st.number_input('Bottiglie restituite', step=1, min_value=0, max_value=max_quant)
+		if controllo_reso == 0 and aggiorna_quant:
 			for dictionary in selected:
 				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
 				# st.write(nome_d)
@@ -111,6 +114,9 @@ if prodotti != []:
 				st.success(f'Reso effettuato')
 				time.sleep(1)
 				st.experimental_rerun()
+		else:
+			pass
+
 else:
 	st.write("Nessuna vendita registrata")
 
