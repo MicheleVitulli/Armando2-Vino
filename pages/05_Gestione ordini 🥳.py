@@ -39,21 +39,14 @@ with tab1:
       prodotti.append(doc.id)
 
   #informazioni evento
-  ord_nome = st.text_input('Inserisci nome evento')
-  ord_data = st.date_input('Inserisci data evento', value=date.today())
+  ord_nome = st.text_input('Inserisci il nome dell\'evento')
+  ord_data = st.date_input('Inserisci la data dell\' evento', value=date.today())
 
   #codice identificativo per ogni singolo evento
   ord_id = ord_nome + str(ord_data)
 
   #informazioni relative ai vini che si vogliono prendere per l'evento
-  # change_text = """
-  # <style>
-  # div.st-cs.st-c5.st-bc.st-ct.st-cu {visibility: hidden;}
-  # div.st-cs.st-c5.st-bc.st-ct.st-cu:before {content: "Seleziona uno o più vini"; visibility: visible;}
-  # </style>
-  # """
-  # st.markdown(change_text, unsafe_allow_html=True)
-  option = st.multiselect('Seleziona i vini', prodotti)
+  option = st.multiselect('Seleziona uno o più vini', prodotti)
 
 
   # --- Selezione del prodotto ---
@@ -192,7 +185,6 @@ with tab2:
 
   resi = []
   for doc in docs_resi:
-    doc_ref.document(doc.id).delete()
     reso = doc.to_dict()['reso']
     for i in reso:
       resi.append({"Ordine reso" : doc.to_dict()['nome'],"Data reso": doc.to_dict()['data'],  "Vino": i , "Quantità": reso[i]}) 
