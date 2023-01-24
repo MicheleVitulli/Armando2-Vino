@@ -27,7 +27,7 @@ st.markdown('📦 Armando 2.0')
 
 st.markdown('# <span style="color: #983C8E;">Gestione Ordini per ricevimenti</span>', unsafe_allow_html=True)
 
-tab1, tab2 = st.tabs(['Gestione degli ordini', 'Gestione dei resi'])
+tab1, tab2 = st.tabs(['Registrazione ordini per ricevimenti', 'Gestione degli ordini per ricevimenti'])
 
 
 with tab1:
@@ -69,7 +69,7 @@ with tab1:
       dict_vino[vino]=[quant, q_vino]
 
       if dict_vino[vino][1] > dict_vino[vino][0]:
-        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(dict_vino[vino][0]))
+        st.warning('⚠️ La quantità di {} non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(' '.join(vino.split()),dict_vino[vino][0]))
 
 
   ordine = st.button('Registra ordine per ricevimento')
@@ -81,11 +81,7 @@ with tab1:
       q_iniziale = dict_vino[i][0]
       q_evento = dict_vino[i][1]
 
-      # if q_evento > q_iniziale:
-      #   st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(q_iniziale))
-      # else:
-      #   control += 1
-      #   db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
+      db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
 
       dict_vino[i].remove(dict_vino[i][0])
 
@@ -96,7 +92,8 @@ with tab1:
       })
       
     st.success('Ordine registrato con successo')
-      # time.sleep(1)
+    time.sleep(1)
+    st.experimental_rerun()
 
 with tab2:
   docs_ordini = db.collection('ordini').stream()
