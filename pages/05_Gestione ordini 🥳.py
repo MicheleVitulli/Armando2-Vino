@@ -78,7 +78,6 @@ with tab1:
       q_iniziale = dict_vino[i][0]
       q_evento = dict_vino[i][1]
 
-      control = 0
       if q_evento < q_iniziale:
         control += 1
 
