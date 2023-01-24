@@ -50,6 +50,7 @@ if option and option != '':
 		prezzo_a = doc.to_dict()['prezzo_a']
 		prezzo_vp = doc.to_dict()['prezzo_vp']
 		quant = doc.to_dict()['quant']
+		soglia = doc.to_dict()['soglia']
 	
 	
 	if option_ac == 'Grossista':
