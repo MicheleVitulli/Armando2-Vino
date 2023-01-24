@@ -87,6 +87,9 @@ if option and option != '':
 		'data': datetime.now().strftime("%Y-%m-%d"),
 		'ricavo' : float(quant_vendita) * float(vendita),
 		'guadagno': (float(quant_vendita) * float(vendita)) - (float(quant_vendita) * float(doc.to_dict()['prezzo_a'])),
+		'prezzo_vg': prezzo_vg,
+		'prezzo_a' : prezzo_a,
+		'prezzo_vp' : prezzo_vp,
 		'reso' : '',
 		'acquirente': option_ac
 		})
