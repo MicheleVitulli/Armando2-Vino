@@ -77,7 +77,7 @@ with tab1:
       q_evento = dict_vino[i][1]
 
       if q_evento > q_iniziale:
-        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a:', q_iniziale)
+        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(q_iniziale))
 
       db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
 
