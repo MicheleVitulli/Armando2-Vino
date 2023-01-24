@@ -70,7 +70,7 @@ if prodotti != []:
 		if aggiorna_quant:
 			for dictionary in selected:
 				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
-				
+				st.write(nome_d)
 				doc_ref = db.collection("vini").document(nome_d)
 				doc = doc_ref.get()
 				db.collection(u'vini').document(nome_d).update({
