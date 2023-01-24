@@ -85,8 +85,11 @@ with tab1:
         st.warning('⚠️ La quantità di {} non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(' '.join(i.split('-')),q_iniziale))
 
     if control == len(dict_vino):
-      db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
-      dict_vino[i].remove(dict_vino[i][0])
+      for i in dict_vino:
+        q_iniziale = dict_vino[i][0]
+        q_evento = dict_vino[i][1]
+        db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
+        dict_vino[i].remove(dict_vino[i][0])
 
       db.collection(u'ordini').document(ord_id).set({
         'nome ordine': ord_nome,
