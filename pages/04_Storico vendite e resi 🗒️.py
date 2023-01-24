@@ -68,7 +68,7 @@ if prodotti != []:
 			controllo_reso = 0
 			if d['Reso'] != '':
 				st.warning('Reso già effettuato', icon="⚠️")
-				controlo_reso = 1
+				controllo_reso = 1
 		if controllo_reso == 0:
 			aggiorna_quant = st.button('Effettua reso')
 			new_quant = st.number_input('Bottiglie restituite', step=1, min_value=0, max_value=max_quant)
