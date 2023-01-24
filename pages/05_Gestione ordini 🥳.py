@@ -159,7 +159,7 @@ with tab2:
       if aggiorna_reso:
         db.collection(u'resi_ordini').document(reso_id).set({
                                                       'nome': reso_id,
-                                                      'data': str(datetime.date.today()),
+                                                      'data': str(date.today()),
                                                       'reso': dict_resi})
         for vino in vini_resi:
           for doc in docs_vini:
