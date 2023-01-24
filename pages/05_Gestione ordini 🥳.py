@@ -53,7 +53,7 @@ with tab1:
   # </style>
   # """
   # st.markdown(change_text, unsafe_allow_html=True)
-  option = st.multiselect('Seleziona i vini', prodotti,)
+  option = st.multiselect('Seleziona i vini', prodotti, default='Seleziona uno o più vini')
 
 
   # --- Selezione del prodotto ---
