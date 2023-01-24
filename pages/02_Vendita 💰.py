@@ -4,6 +4,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from datetime import datetime, date
 import time
+from zoneinfo import ZoneInfo
 
 
 # --- Importazione firebase, necessario if per evitare errore streamlit ---
