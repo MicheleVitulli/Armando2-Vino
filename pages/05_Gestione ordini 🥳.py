@@ -139,15 +139,13 @@ with tab2:
     if len(selected) == 1:
       reso_id = selected[0]['Nome ordine']
 
-      st.write(selected) 
-
       for doc in docs_ordini:
         if reso_id == doc.id:
           ordine = doc.to_dict()['ordinato']
-          prodotti = sorted(ordine.keys())
+          prodotti_resi = sorted(ordine.keys())
 
 
-      vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
+      vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti_resi)
 
       dict_resi = {}
       for vino in vini_resi:
