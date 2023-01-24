@@ -179,7 +179,7 @@ with tab2:
     reso = doc.to_dict()['reso']
     st.write(reso)
     for i in reso:
-      resi.append({"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Vino": i , "Quantità": dict_resi[i]}) 
+      resi.append({"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Vino": i , "Quantità": reso[i]}) 
   st.write(resi)
 
 
