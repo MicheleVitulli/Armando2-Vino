@@ -70,29 +70,42 @@ if prodotti != []:
 		if aggiorna_quant:
 			for dictionary in selected:
 				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
-				st.write(nome_d)
-				doc_ref = db.collection("vini").document(nome_d)
-				doc = doc_ref.get()
-				db.collection(u'vini').document(nome_d).update({
-					'quant': doc.to_dict()['quant'] + new_quant,
-				})
+				# st.write(nome_d)
+				# doc_ref = db.collection("vini").document(nome_d)
+				# doc = doc_ref.get()
+				# db.collection(u'vini').document(nome_d).update({
+				# 	'quant': doc.to_dict()['quant'] + new_quant,
+				# })
 				query = db.collection(u'vendite').where(u'nome', u'==', dictionary['Nome']).where(u'annata', u'==', dictionary['Annata']).where(u'data', u'==', dictionary['Data Vendita'])
 				docs = query.stream()
 				for doc in docs:
 					db.collection('vendite').document(doc.id).update({
-					'reso': str(new_quant) + ' resi il ' + datetime.now().strftime("%Y-%m-%d"),
-					#'ricavo': doc.to_dict()['ricavo'] - (new_quant * doc.to_dict()['ricavo']/doc.to_dict()['quant']),
-					#'quant': doc.to_dict()['quant'] - new_quant
+					'reso': str(new_quant) + ';' + datetime.now().strftime("%Y-%m-%d")
 					})
+					prod_nome = dictionary['Nome']
+					prod_ann = dictionary['Annata']
+					prod_prezzo_p = doc.to_dict()['prezzo_vp']
+					prod_prezzo_g = doc.to_dict()['prezzo_vg']
+					prod_prezzo_ac = doc.to_dict()['prezzo_a']
+					soglia = doc.to_dict()['soglia']
 					break
+				try:
+					doc_ref = db.collection("vini").document(nome_d)
+					doc = doc_ref.get()
+					old_quant = doc.to_dict()['quant']
+				except:
+					old_quant = 0
 
-				doc_ref = db.collection("resi").document()
-				doc_ref.set({
-						'annata': dictionary['Annata'],
-						'nome' : dictionary['Nome'],
-						'quant': new_quant,
-						'data' : datetime.now().strftime("%Y-%m-%d")
+				db.collection(u'vini').document(nome_d).set({
+					'nome': prod_nome,
+					'quant': old_quant + new_quant,
+					'prezzo_vp' : prod_prezzo_p,
+					'prezzo_vg' : prod_prezzo_g,
+					'prezzo_a' : prod_prezzo_ac,
+					'annata': prod_ann,
+					'soglia': soglia 
 					})
+
 				st.success(f'Reso effettuato')
 				time.sleep(1)
 				st.experimental_rerun()
