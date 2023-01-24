@@ -68,6 +68,9 @@ with tab1:
 
       dict_vino[vino]=[quant, q_vino]
 
+      if dict_vino[vino][1] > dict_vino[vino][0]:
+        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(dict_vino[vino][0]))
+
   ordine = st.button('Registra ordine per ricevimento')
 
   if ordine and option!=[]:
@@ -76,8 +79,8 @@ with tab1:
       q_iniziale = dict_vino[i][0]
       q_evento = dict_vino[i][1]
 
-      if q_evento > q_iniziale:
-        st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(q_iniziale))
+      # if q_evento > q_iniziale:
+      #   st.warning('⚠️ La quantità non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(q_iniziale))
 
       db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
 
