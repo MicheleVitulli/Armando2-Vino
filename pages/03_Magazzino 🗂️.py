@@ -74,7 +74,7 @@ if prodotti != []:
 			st.warning('⚠️ Seleziona almeno un vino')
 		else:
 			for dictionary in selected:
-				nome_d = dictionary['Nome'] + dictionary['Annata']
+				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
 				db.collection(u'vini').document(nome_d).delete()
 			st.success(f'Eliminazione avvenuta')
 			time.sleep(1)
@@ -82,7 +82,7 @@ if prodotti != []:
 
 	elimina_esauriti = col2.button('Elimina esauriti')
 	if elimina_esauriti:
-		query = db.collection(u'vini').where(u'quant', u'==', 0)
+		query = db.collection(u'vini').where(u'quant', u'<=', 0)
 		docs = query.stream()
 		for doc in docs:
 			db.collection(u'vini').document(doc.id).delete()
@@ -102,7 +102,7 @@ if prodotti != []:
 			st.warning('⚠️ Seleziona almeno un vino')
 		else:
 			for dictionary in selected:
-				nome_d = dictionary['Nome'] + dictionary['Annata']
+				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
 				db.collection(u'vini').document(nome_d).update({
 					
 					'quant': new_quant,
