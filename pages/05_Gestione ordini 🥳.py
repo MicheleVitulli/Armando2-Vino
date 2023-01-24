@@ -69,7 +69,7 @@ with tab1:
       dict_vino[vino]=[quant, q_vino]
 
       if dict_vino[vino][1] > dict_vino[vino][0]:
-        st.warning('⚠️ La quantità di {} non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(' '.join(vino.split()),dict_vino[vino][0]))
+        st.warning('⚠️ La quantità di {} non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(' '.join(vino.split('-')),dict_vino[vino][0]))
 
 
   ordine = st.button('Registra ordine per ricevimento')
