@@ -183,13 +183,12 @@ with tab2:
   st.write(resi)
 
 
-  # if resi != []:
-  #   data2 = pd.DataFrame(resi)
-  #   gd2 = GridOptionsBuilder.from_dataframe(data2)
-  #   gd2.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
-  #   gridOptions2 = gd2.build()
+  if resi != []:
+    data2 = pd.DataFrame(resi)
+    gd2 = GridOptionsBuilder.from_dataframe(data2)
+    gd2.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
+    gridOptions2 = gd2.build()
 
-
-  #   table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
+    table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
   # else:
   #   st.write("Nessun reso registrato")
