@@ -137,7 +137,9 @@ with tab2:
     docs_ordini = db.collection('ordini').stream()
 
     if len(selected) == 1:
-      reso_id = selected[0]['Nome ordine'] 
+      reso_id = selected[0]['Nome ordine']
+
+      st.write(selected) 
 
       for doc in docs_ordini:
         if reso_id == doc.id:
