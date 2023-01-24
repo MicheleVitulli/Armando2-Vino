@@ -68,9 +68,6 @@ with tab1:
 
       dict_vino[vino]=[quant, q_vino]
 
-      if dict_vino[vino][1] > dict_vino[vino][0]:
-        st.warning('⚠️ La quantità di {} non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(' '.join(vino.split('-')),dict_vino[vino][0]))
-
 
   ordine = st.button('Registra ordine per ricevimento')
 
@@ -81,19 +78,26 @@ with tab1:
       q_iniziale = dict_vino[i][0]
       q_evento = dict_vino[i][1]
 
-      db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
+      control = 0
+      if q_evento < q_iniziale:
+        control += 1
 
+      else:
+        st.warning('⚠️ La quantità di {} non è disponibile in magazzino. La scorta attuale è pari a: {}'.format(' '.join(i.split('-')),q_iniziale))
+
+    if control == len(dict_vino):
+      db.collection(u'vini').document(i).update({'quant': q_iniziale - q_evento})
       dict_vino[i].remove(dict_vino[i][0])
 
-    db.collection(u'ordini').document(ord_id).set({
-      'nome ordine': ord_nome,
-      'data evento': str(ord_data),
-      'ordinato': dict_vino
-      })
-      
-    st.success('Ordine registrato con successo')
-    time.sleep(1)
-    st.experimental_rerun()
+      db.collection(u'ordini').document(ord_id).set({
+        'nome ordine': ord_nome,
+        'data evento': str(ord_data),
+        'ordinato': dict_vino
+        })
+        
+      st.success('Ordine registrato con successo')
+      time.sleep(1)
+      st.experimental_rerun()
 
 with tab2:
   docs_ordini = db.collection('ordini').stream()
