@@ -159,7 +159,7 @@ with tab2:
       if aggiorna_reso:
         db.collection(u'resi_ordini').document(reso_id).set({
                                                       'nome': reso_id,
-                                                      'data': str(datetime.date.today()),
+                                                      'data': str(datetime.now()),
                                                       'reso': dict_resi})
         for vino in vini_resi:
           for doc in docs_vini:
@@ -176,6 +176,7 @@ with tab2:
 
   resi = []
   for doc in docs_resi:
+    doc_ref.document(doc.id).delete()
     reso = doc.to_dict()['reso']
     st.write(reso)
     for i in reso:
