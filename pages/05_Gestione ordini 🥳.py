@@ -168,7 +168,9 @@ with tab2:
               db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
 
         col2.success('Reso registrato con successo')
-
+        time.sleep(1)
+        st.experimental_rerun()
+        
 # --- Resi ---
 
   doc_ref = db.collection(u"resi_ordini")
