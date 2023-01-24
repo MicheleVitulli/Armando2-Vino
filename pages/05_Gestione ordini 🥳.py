@@ -154,6 +154,7 @@ with tab2:
           prodotti = ordine.keys()
 
       vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
+      time.sleep(5)
 
       dict_resi = {}
       for vino in vini_resi:
