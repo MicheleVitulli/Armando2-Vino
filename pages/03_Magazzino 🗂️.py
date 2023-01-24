@@ -74,7 +74,7 @@ if prodotti != []:
 			st.warning('⚠️ Seleziona almeno un vino')
 		else:
 			for dictionary in selected:
-				nome_d = dictionary['Nome'] + dictionary['Annata']
+				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
 				db.collection(u'vini').document(nome_d).delete()
 			st.success(f'Eliminazione avvenuta')
 			time.sleep(1)
@@ -102,7 +102,7 @@ if prodotti != []:
 			st.warning('⚠️ Seleziona almeno un vino')
 		else:
 			for dictionary in selected:
-				nome_d = dictionary['Nome'] + '-' dictionary['Annata']
+				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
 				db.collection(u'vini').document(nome_d).update({
 					
 					'quant': new_quant,
