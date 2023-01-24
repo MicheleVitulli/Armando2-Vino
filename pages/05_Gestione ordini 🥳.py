@@ -171,8 +171,8 @@ with tab2:
 
 # --- Resi ---
 
-  # doc_ref = db.collection(u"resi_ordini")
-  # docs_resi = doc_ref.stream()
+  doc_ref = db.collection(u"resi_ordini")
+  docs_resi = doc_ref.stream()
 
   # resi = []
   # for doc in docs_resi:
