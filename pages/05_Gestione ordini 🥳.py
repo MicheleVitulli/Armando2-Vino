@@ -64,7 +64,7 @@ with tab1:
         prezzo_vp = doc.to_dict()['prezzo_vp']
         quant = doc.to_dict()['quant']
 
-      q_vino = st.number_input('Quante bottiglie di {}'.format(vino), key=str(vino), step=1, min_value=0)
+      q_vino = st.number_input('Quante bottiglie di <span style="color: #983C8E;">{}</span>'.format(vino), key=str(vino), step=1, min_value=0)
 
       dict_vino[vino]=[quant, q_vino]
 
