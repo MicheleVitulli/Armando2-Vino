@@ -46,6 +46,13 @@ with tab1:
   ord_id = ord_nome + str(ord_data)
 
   #informazioni relative ai vini che si vogliono prendere per l'evento
+  change_text = """
+  <style>
+  div.st-cs.st-c5.st-bc.st-ct.st-cu {visibility: hidden;}
+  div.st-cs.st-c5.st-bc.st-ct.st-cu:before {content: "Seleziona uno o più vini"; visibility: visible;}
+  </style>
+  """
+  st.markdown(change_text, unsafe_allow_html=True)
   option = st.multiselect('Seleziona i vini', prodotti, help='Qui è possibile selezionare uno o più vini')
 
 
