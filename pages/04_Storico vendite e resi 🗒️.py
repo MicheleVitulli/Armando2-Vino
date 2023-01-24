@@ -65,6 +65,8 @@ if prodotti != []:
 	if selected != []:
 		for d in selected:
 			max_quant = d['Quantità']
+			if d['Reso'] != '':
+				st.write('è già presente un reso')
 		aggiorna_quant = st.button('Effettua reso')
 		new_quant = st.number_input('Bottiglie restituite', step=1, min_value=0, max_value=max_quant)
 		if aggiorna_quant:
