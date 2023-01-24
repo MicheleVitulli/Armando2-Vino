@@ -146,10 +146,10 @@ with tab2:
           prodotti = ordine.keys()
 
       vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
-      st.write(vini_resi)
 
       dict_resi = {}
       for vino in vini_resi:
+        st.write(vino)
         q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), min_value=0, step=1, key=vino)
         dict_resi[vino] = q_reso
 
