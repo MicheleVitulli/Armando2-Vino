@@ -91,7 +91,8 @@ if option and option != '':
 		'prezzo_a' : prezzo_a,
 		'prezzo_vp' : prezzo_vp,
 		'reso' : '',
-		'acquirente': option_ac
+		'acquirente': option_ac,
+		'soglia': soglia
 		})
 		
 		# time.sleep(1) serve a bloccare l'applicazione un secondo prima di runnarla nuovamente
