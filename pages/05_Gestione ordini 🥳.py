@@ -178,10 +178,8 @@ with tab2:
   for doc in docs_resi:
     doc_ref.document(doc.id).delete()
     reso = doc.to_dict()['reso']
-    st.write(reso)
     for i in reso:
       resi.append({"Ordine reso" : doc.to_dict()['nome'],"Data reso": doc.to_dict()['data'],  "Vino": i , "Quantità": reso[i]}) 
-  st.write(resi)
 
 
   if resi != []:
@@ -191,5 +189,5 @@ with tab2:
     gridOptions2 = gd2.build()
 
     table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
-  # else:
-  #   st.write("Nessun reso registrato")
+  else:
+    st.write("Nessun reso registrato")
