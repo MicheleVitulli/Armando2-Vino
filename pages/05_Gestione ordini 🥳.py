@@ -176,7 +176,7 @@ with tab2:
 
   resi = []
   for doc in docs_resi:
-    doc_ref.documento(doc.id).delete()
+    doc_ref.document(doc.id).delete()
     reso = doc.to_dict()['reso']
     st.write(reso)
   #   for i in reso:
