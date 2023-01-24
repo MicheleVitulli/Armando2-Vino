@@ -69,7 +69,7 @@ if prodotti != []:
 		new_quant = st.number_input('Bottiglie restituite', step=1, min_value=0, max_value=max_quant)
 		if aggiorna_quant:
 			for dictionary in selected:
-				nome_d = dictionary['Nome'] + dictionary['Annata']
+				nome_d = dictionary['Nome'] + '-' + dictionary['Annata']
 				
 				doc_ref = db.collection("vini").document(nome_d)
 				doc = doc_ref.get()
