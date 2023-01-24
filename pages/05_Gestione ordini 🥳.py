@@ -143,7 +143,7 @@ with tab2:
         if reso_id == doc.id:
           ordine = doc.to_dict()['ordinato']
           prodotti_resi = ordine.keys()
-          vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti_resi)
+      vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti_resi)
 
       dict_resi = {}
       for vino in vini_resi:
