@@ -142,7 +142,7 @@ with tab2:
       for doc in docs_ordini:
         if reso_id == doc.id:
           ordine = doc.to_dict()['ordinato']
-          prodotti = ordine.keys()
+          prodotti = sorted(ordine.keys())
 
 
       vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
@@ -157,10 +157,8 @@ with tab2:
       docs_vini = db.collection(u'vini').stream()
 
       if aggiorna_reso:
-        db.collection(u'resi_ordini').document(reso_id).set({
-                                                      'nome': reso_id,
-                                                      'data': str(date.today()),
-                                                      'reso': dict_resi})
+        db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_id,'data': str(date.today()),'reso': dict_resi})
+
         for vino in vini_resi:
           for doc in docs_vini:
             if vino == doc.id:
@@ -170,7 +168,7 @@ with tab2:
         col2.success('Reso registrato con successo')
         time.sleep(1)
         st.experimental_rerun()
-        
+
 # --- Resi ---
 
   doc_ref = db.collection(u"resi_ordini")
