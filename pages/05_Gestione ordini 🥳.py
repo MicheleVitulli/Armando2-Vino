@@ -148,8 +148,7 @@ with tab2:
     if len(selected) == 1:
       reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
 
-      for doc in docs_ordini:
-        
+      for doc in docs_ordini:   
         if reso_id == doc.id:
           ordine = doc.to_dict()['ordinato']
           prodotti = ordine.keys()
@@ -158,7 +157,7 @@ with tab2:
 
       dict_resi = {}
       for vino in vini_resi:
-        dict_resi[vino] = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), min_value=0, step=1, key=vino)
+        dict_resi[vino] = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), min_value=0, step=1)
 
       aggiorna_reso = col2.button('Registra reso')
 
