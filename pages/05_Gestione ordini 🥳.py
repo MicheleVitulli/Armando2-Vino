@@ -40,7 +40,7 @@ with tab1:
 
   #informazioni evento
   ord_nome = st.text_input('Inserisci nome evento')
-  ord_data = st.date_input('Inserisci data evento', value=datetime.now())
+  ord_data = st.date_input('Inserisci data evento', value=date.today())
 
   #codice identificativo per ogni singolo evento
   ord_id = ord_nome + str(ord_data)
@@ -138,8 +138,10 @@ with tab2:
 
     if len(selected) == 1:
       reso_id = selected[0]['Nome ordine']
+      st.write(reso_id)
 
       for doc in docs_ordini:
+        
         if reso_id == doc.id:
           ordine = doc.to_dict()['ordinato']
           prodotti = ordine.keys()
