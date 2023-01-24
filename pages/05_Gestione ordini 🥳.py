@@ -186,6 +186,7 @@ with tab2:
   resi = []
   for doc in docs_resi:
     reso = doc.to_dict()['reso']
+    reso = sorted(reso)
     for i in reso:
       resi.append({"Ordine reso" : doc.to_dict()['nome'],"Data reso": doc.to_dict()['data'],  "Vino": i , "Quantità": reso[i]}) 
 
