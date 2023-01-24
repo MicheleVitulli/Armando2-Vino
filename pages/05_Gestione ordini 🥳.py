@@ -176,12 +176,11 @@ with tab2:
 
   resi = []
   for doc in docs_resi:
-    doc_ref.document(doc.id).delete()
     reso = doc.to_dict()['reso']
     st.write(reso)
-  #   for i in reso:
-  #     resi.append({"Ordine reso" : doc.to_dict()['nome'],"Data reso": doc.to_dict()['data'],  "Vino": i , "Quantità": reso[i]}) 
-  # st.write(resi)
+    for i in reso:
+      resi.append({"Ordine reso" : doc.to_dict()['nome'],"Data reso": doc.to_dict()['data'],  "Vino": i , "Quantità": reso[i]}) 
+  st.write(resi)
 
 
   # if resi != []:
