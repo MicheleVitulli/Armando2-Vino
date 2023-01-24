@@ -114,27 +114,27 @@ else:
 
 
 # --- Resi ---
-st.markdown('# <span style="color: #983C8E;">Storico resi</span>', unsafe_allow_html=True)
-doc_ref = db.collection("resi")
-docs = doc_ref.stream()
-resi = []
-for doc in docs:
+# st.markdown('# <span style="color: #983C8E;">Storico resi</span>', unsafe_allow_html=True)
+# doc_ref = db.collection("resi")
+# docs = doc_ref.stream()
+# resi = []
+# for doc in docs:
 
-	# creo il dizionario parziale e lo aggiungo all'array ( di dizionari ) prodotti
-	prodotti_dict = {"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Annata": doc.to_dict()['annata'], "Quantità": doc.to_dict()['quant']} 
-	resi.append(prodotti_dict)
-
-
-if resi != []:
-	data2 = pd.DataFrame(resi)
-	gd2 = GridOptionsBuilder.from_dataframe(data2)
-	gd2.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
-	gridOptions2 = gd2.build()
+# 	# creo il dizionario parziale e lo aggiungo all'array ( di dizionari ) prodotti
+# 	prodotti_dict = {"Data Reso" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],  "Annata": doc.to_dict()['annata'], "Quantità": doc.to_dict()['quant']} 
+# 	resi.append(prodotti_dict)
 
 
-	table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
-else:
-	st.write("Nessun reso registrato")
+# if resi != []:
+# 	data2 = pd.DataFrame(resi)
+# 	gd2 = GridOptionsBuilder.from_dataframe(data2)
+# 	gd2.configure_pagination(enabled=True, paginationAutoPageSize=False, paginationPageSize=6)
+# 	gridOptions2 = gd2.build()
+
+
+# 	table2 = AgGrid(data2, gridOptions=gridOptions2, update_mode=GridUpdateMode.SELECTION_CHANGED, enable_enterprise_modules=False, fit_columns_on_grid_load=False)
+# else:
+# 	st.write("Nessun reso registrato")
 
 
 
