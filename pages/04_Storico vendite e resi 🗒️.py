@@ -42,7 +42,7 @@ prodotti = []
 for doc in docs:
 
 	# creo il dizionario parziale e lo aggiungo all'array ( di dizionari ) prodotti
-	prodotti_dict = {"Data Vendita" : doc.to_dict()['data'],"Nome": doc.to_dict()['nome'],"Annata" : doc.to_dict()['annata'], "Quantità" : doc.to_dict()['quant'],  "Ricavo" : doc.to_dict()['ricavo'],"Acquirente": doc.to_dict()['acquirente'], 'Reso': doc.to_dict()['reso']} 
+	prodotti_dict = {"Data Vendita" : doc.to_dict()['data'].split(' ')[0],"Nome": doc.to_dict()['nome'],"Annata" : doc.to_dict()['annata'], "Quantità" : doc.to_dict()['quant'],  "Ricavo" : doc.to_dict()['ricavo'],"Acquirente": doc.to_dict()['acquirente'], 'Reso': doc.to_dict()['reso']} 
 	prodotti.append(prodotti_dict)
 
 
