@@ -169,14 +169,14 @@ with tab2:
         for vino in vini_resi:
           if vini_ordinato_dic[vino][0] < dict_resi[vino]:
             controllo_q_resi = controllo_q_resi
-            st.warning('⚠️ Quantità da rendere non disponibile per {}'.format(' '.join(vino.split('-'))))
+            col2.warning('⚠️ Quantità da rendere non disponibile per {}'.format(' '.join(vino.split('-'))))
           else:
             controllo_q_resi += 1
         
-        if controllo_q_resi != len(vini_resi):
-            col2.warning('⚠️ Quantità da rendere non disponibile')
+        # if controllo_q_resi != len(vini_resi):
+        #     col2.warning('⚠️ Quantità da rendere non disponibile')
           
-        else:
+        if controllo_q_resi == len(vini_resi):
           reso_nome = selected[0]['Nome ordine']
           db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_nome,'data': str(date.today()),'reso': dict_resi})
 
