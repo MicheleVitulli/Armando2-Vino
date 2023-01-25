@@ -148,17 +148,11 @@ with tab2:
     if selected != []:
       reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
 
-      # for doc in docs_ordini:   
-      #   if reso_id == doc.id:
-      #     ordine = doc.to_dict()['ordinato']
-      #     prodotti = ordine.keys()
-
       query = db.collection(u'ordini').document(reso_id).get()
       vini_ordinato = query.to_dict()['ordinato']
-      st.write(vini_ordinato)
-      prodotti = vini_ordinato.keys() 
+      vini_ordinato = list(vini_ordinato.keys()) 
 
-      vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
+      vini_resi = col2.multiselect('Scegli il prodotto da rendere', vini_ordinato)
 
       dict_resi = {}
       for vino in vini_resi:
