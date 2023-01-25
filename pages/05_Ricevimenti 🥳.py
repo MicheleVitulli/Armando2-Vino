@@ -158,7 +158,7 @@ with tab2:
       if vini_resi and vini_resi !=[]:
         dict_resi = {}
         for vino in vini_resi:
-          dict_resi[vino] = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
+          dict_resi[vino] = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=vino, min_value=0, step=1)
           # dict_resi[vino] = q_reso
 
       aggiorna_reso = col2.button('Registra reso')
