@@ -130,7 +130,7 @@ with tab2:
 
     col1, col2 = st.columns(2)
 
-    elimina_selezionati = col1.button('Elimina selezionati')
+    elimina_selezionati = col1.button('Elimina ordine selezionato')
     if elimina_selezionati:
       if selected == []:
         st.warning('⚠️ Seleziona almeno un ordine')
@@ -148,10 +148,14 @@ with tab2:
     if selected != []:
       reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
 
-      for doc in docs_ordini:   
-        if reso_id == doc.id:
-          ordine = doc.to_dict()['ordinato']
-          prodotti = ordine.keys()
+      # for doc in docs_ordini:   
+      #   if reso_id == doc.id:
+      #     ordine = doc.to_dict()['ordinato']
+      #     prodotti = ordine.keys()
+
+      query = db.collection(u'ordini').document(reso_id).to_dict()['ordinato']
+      st.write(query)
+      prodotti = query.keys()
 
       vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
 
