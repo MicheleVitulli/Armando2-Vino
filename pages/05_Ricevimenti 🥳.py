@@ -157,7 +157,8 @@ with tab2:
 
       dict_resi = {}
       for vino in vini_resi:
-        dict_resi[vino] = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), min_value=0, step=1)
+        q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=vino, in_value=0, step=1)
+        dict_resi[vino] = q_reso
 
       aggiorna_reso = col2.button('Registra reso')
 
