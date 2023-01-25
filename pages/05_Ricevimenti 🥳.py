@@ -149,7 +149,7 @@ with tab2:
 
       query = db.collection(u'ordini').document(reso_id).get()
       vini_ordinato = query.to_dict()['ordinato']
-      vini_ordinato = list(vini_ordinato.keys()) 
+      vini_ordinato = sorted(vini_ordinato.keys()) 
 
       vini_resi = col2.multiselect('Scegli il prodotto da rendere', vini_ordinato)
 
