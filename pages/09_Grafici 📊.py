@@ -11,6 +11,7 @@ import random
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 import numpy as np
+import operator
 
 if not firebase_admin._apps:
 	cred = credentials.Certificate('firestore-key.json')
@@ -64,7 +65,6 @@ if option == "Grafici vendite generali":
 			mese = data.split('/')[1]
 			anno = data.split('/')[2][0:4]
 			
-			print("laanno è qui:",  anno)
 			if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno):
 				if not nome in new_data['prodotti']:
 					new_data['prodotti'].append(nome)
@@ -85,9 +85,79 @@ if option == "Grafici vendite generali":
 		ax.set_xlabel('quantità')
 		ax.invert_yaxis()
 		plt.grid(axis = 'x', linestyle = '--', linewidth = 0.5)
-		#plt.figure(figsize=(2, 2))
-		#figure(figsize=(1, 1))
 		st.pyplot(fig)
+
+
+		#--------------vino più venduto----------------
+		doc_refg = db.collection("vendite")
+		docsg = doc_ref.stream()
+		new_datagg = {'prodotti': [], 'quantità': []}
+		new_datagp = {'prodotti': [], 'quantità': []}
+		vino_grossista = ''
+		vino_privato = ''
+		for doc in docsg:
+			nome = doc.to_dict()['nome']
+			quant = doc.to_dict()['quant']
+			data = doc.to_dict()['data']
+			mese = data.split('/')[1]
+			anno = data.split('/')[2][0:4]
+			acq = doc.to_dict()['acquirente']
+
+			if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno) and 'Grossista' == str(acq):
+				if not nome in new_datagg['prodotti']:
+					new_datagg['prodotti'].append(nome)
+					new_datagg['quantità'].append(quant)
+				
+				else:
+					pos = 0
+					for i in range(len(new_datagg['prodotti'])):
+						if nome == new_datagg['prodotti'][i]:
+							pos = i
+					temp = new_datagg['quantità'][pos]
+					new_quant = temp + quant
+					new_datagg['quantità'][pos] = new_quant
+
+			if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno) and 'Privato' == str(acq):
+				if not nome in new_datagp['prodotti']:
+					new_datagp['prodotti'].append(nome)
+					new_datagp['quantità'].append(quant)
+				
+				else:
+					pos = 0
+					for i in range(len(new_datagp['prodotti'])):
+						if nome == new_datagp['prodotti'][i]:
+							pos = i
+					temp = new_datagp['quantità'][pos]
+					new_quant = temp + quant
+					new_datagp['quantità'][pos] = new_quant
+		
+		max_quant = max(new_datagg['quantità'])
+		for t in range(len(new_datagg['quantità'])):
+			gg = new_datagg['quantità'][t]
+			if gg == max_quant:
+				vino_grossista = vino_grossista + ", " + (new_datagg['prodotti'][t])
+
+		max_quant = max(new_datagp['quantità'])
+		for t in range(len(new_datagp['quantità'])):
+			gg = new_datagp['quantità'][t]
+			if gg == max_quant:
+				vino_privato = vino_privato + ", " + (new_datagp['prodotti'][t])
+
+
+		len1 = int(len(vino_privato))
+		vp = vino_privato[2:]
+		if ',' in vp:
+			st.caption(f'I vini più venuti a privati sono: {vp}')
+		else:
+			st.caption(f'Il vino più venuto a privati è: {vp}')
+		
+		len2 = int(len(vino_grossista))
+		vg = vino_grossista[2:]
+		if ',' in vg:
+			st.caption(f'I vini più venuti a grossisti sono: {vg}')
+		else:
+			st.caption(f'Il vino più venuto a grossisti è: {vg}')
+
 
 
 		st.markdown('# <span style="color: #983C8E;">Grafico dei guadagni</span>', unsafe_allow_html=True)
@@ -128,13 +198,7 @@ if option == "Grafici vendite generali":
 
 	#---------------------------RESI e RICAVI------------------------------------
 	with col2:
-		st.markdown('# <span style="color: #983C8E;">Grafico dei resi</span>', unsafe_allow_html=True)
-		doc_ref3 = db.collection("vendite")
-		docs3 = doc_ref.stream()
-		new_data3 = {'prodotti': [], 'ricavi': []}
-
-
-
+		
 		st.markdown('# <span style="color: #983C8E;">Grafico dei ricavi</span>', unsafe_allow_html=True)
 		doc_ref2 = db.collection("vendite")
 		docs2 = doc_ref.stream()
@@ -168,8 +232,6 @@ if option == "Grafici vendite generali":
 		ax2.invert_yaxis()
 		plt.grid(axis = 'x', linestyle = '--', linewidth = 0.5)
 		st.pyplot(fig2)
-		
-		
 		
 		
 #--------------------PROVA-----------------------
