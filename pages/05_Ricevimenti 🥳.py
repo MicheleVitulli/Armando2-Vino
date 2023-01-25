@@ -54,15 +54,8 @@ with tab1:
   if option and option != '':
     for vino in option:
       info = vino.split('-')
-      query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
+      # query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
       query = db.collection(u'vini').document(vino).get()
-      # docs = query.stream()
-      # for doc in docs:
-        # nome = doc.to_dict()['nome']
-        # annata = doc.to_dict()['annata']
-        # prezzo_vg = doc.to_dict()['prezzo_vg']
-        # prezzo_a = doc.to_dict()['prezzo_a']
-        # prezzo_vp = doc.to_dict()['prezzo_vp']
       quant = query.to_dict()['quant']
 
       q_ord = st.number_input('Quante bottiglie di {}'.format(' '.join(vino.split('-'))), key=str(vino), step=1, min_value=0)
@@ -165,16 +158,13 @@ with tab2:
       docs_vini = db.collection(u'vini').stream()
 
       if aggiorna_reso:
-        controllo_q_resi = 0
+        controllo_q_resi = 0    # contatore di controllo per verificare le quantità da rendere
         for vino in vini_resi:
           if vini_ordinato_dic[vino][0] < dict_resi[vino]:
             controllo_q_resi = controllo_q_resi
             col2.warning('⚠️ Quantità da rendere non disponibile per {}'.format(' '.join(vino.split('-'))))
           else:
             controllo_q_resi += 1
-        
-        # if controllo_q_resi != len(vini_resi):
-        #     col2.warning('⚠️ Quantità da rendere non disponibile')
           
         if controllo_q_resi == len(vini_resi):
           reso_nome = selected[0]['Nome ordine']
