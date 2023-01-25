@@ -156,10 +156,10 @@ with tab2:
       if vini_resi and vini_resi !=[]:
         dict_resi = {}
         for vino in vini_resi:
-          q_ord = vini_ordinato_dic[vino]
+          q_ord = int(vini_ordinato_dic[vino])
           st.write(q_ord)
           q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
-          
+
           if q_reso and q_reso > q_ord:
             col2.warning('⚠️ Quantità da rendere non disponibile')
           # elif q_reso and q_reso <= q_ord:
