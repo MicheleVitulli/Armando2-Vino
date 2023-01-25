@@ -153,7 +153,7 @@ with tab2:
       #     ordine = doc.to_dict()['ordinato']
       #     prodotti = ordine.keys()
 
-      query = db.collection(u'ordini').document(reso_id)
+      query = db.collection(u'ordini').document(reso_id).get()
       vini_ordinato = query.to_dict()['ordinato']
       st.write(vini_ordinato)
       prodotti = vini_ordinato.keys() 
