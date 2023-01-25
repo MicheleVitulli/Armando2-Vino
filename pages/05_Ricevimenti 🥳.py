@@ -145,37 +145,37 @@ with tab2:
     
     docs_ordini = db.collection('ordini').stream()
 
-    if len(selected) == 1:
-      reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
+    # if len(selected) == 1:
+    reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
 
-      for doc in docs_ordini:   
-        if reso_id == doc.id:
-          ordine = doc.to_dict()['ordinato']
-          prodotti = ordine.keys()
+    for doc in docs_ordini:   
+      if reso_id == doc.id:
+        ordine = doc.to_dict()['ordinato']
+        prodotti = ordine.keys()
 
-      vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
+    vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
 
-      dict_resi = {}
+    dict_resi = {}
+    for vino in vini_resi:
+      q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
+      dict_resi[vino] = q_reso
+
+    aggiorna_reso = col2.button('Registra reso')
+
+    docs_vini = db.collection(u'vini').stream()
+
+    if aggiorna_reso:
+      db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_id,'data': str(date.today()),'reso': dict_resi})
+
       for vino in vini_resi:
-        q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
-        dict_resi[vino] = q_reso
+        for doc in docs_vini:
+          if vino == doc.id:
+            q_iniziale = doc.to_dict()['quant']
+            db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
 
-      aggiorna_reso = col2.button('Registra reso')
-
-      docs_vini = db.collection(u'vini').stream()
-
-      if aggiorna_reso:
-        db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_id,'data': str(date.today()),'reso': dict_resi})
-
-        for vino in vini_resi:
-          for doc in docs_vini:
-            if vino == doc.id:
-              q_iniziale = doc.to_dict()['quant']
-              db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
-
-        col2.success('Reso registrato con successo')
-        time.sleep(1)
-        st.experimental_rerun()
+      col2.success('Reso registrato con successo')
+      time.sleep(1)
+      st.experimental_rerun()
 
 # --- Resi ---
 
