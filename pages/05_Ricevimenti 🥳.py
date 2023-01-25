@@ -148,15 +148,15 @@ with tab2:
       reso_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
 
       query = db.collection(u'ordini').document(reso_id).get()
-      vini_ordinato = query.to_dict()['ordinato']
-      vini_ordinato = sorted(vini_ordinato.keys()) 
+      vini_ordinato_dic = query.to_dict()['ordinato']
+      vini_ordinato_list = sorted(vini_ordinato_dic.keys()) 
 
-      vini_resi = col2.multiselect('Scegli il prodotto da rendere', vini_ordinato)
+      vini_resi = col2.multiselect('Scegli il prodotto da rendere', vini_ordinato_list)
 
       if vini_resi and vini_resi !=[]:
         dict_resi = {}
         for vino in vini_resi:
-          q_ord = vini_ordinato[vino]
+          q_ord = vini_ordinato_dic[vino]
           q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
           if q_reso > q_ord:
             col2.warning('⚠️ Quantità da rendere non disponibile')
