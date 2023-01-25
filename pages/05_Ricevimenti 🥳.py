@@ -164,7 +164,8 @@ with tab2:
       docs_vini = db.collection(u'vini').stream()
 
       if aggiorna_reso:
-        db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_id,'data': str(date.today()),'reso': dict_resi})
+        reso_nome = selected[0]['Nome ordine']
+        db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_nome,'data': str(date.today()),'reso': dict_resi})
 
         for vino in vini_resi:
           for doc in docs_vini:
