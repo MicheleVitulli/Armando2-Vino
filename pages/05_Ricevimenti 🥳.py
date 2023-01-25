@@ -164,25 +164,29 @@ with tab2:
       docs_vini = db.collection(u'vini').stream()
 
       if aggiorna_reso:
+        controllo_q_resi = 0
         for vino in vini_resi:
+          st.write( vini_ordinato_dic[vino][0], dict_resi[vino])
           if vini_ordinato_dic[vino][0] < dict_resi[vino]:
+            controllo_q_resi = controllo_q_resi
+          controllo_q_resi += 1
+        
+        if controllo_q_resi != len(vini_resi):
             col2.warning('⚠️ Quantità da rendere non disponibile')
           
-          else:
+        else:
+          reso_nome = selected[0]['Nome ordine']
+          db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_nome,'data': str(date.today()),'reso': dict_resi})
 
+      # for vino in vini_resi:
+          for doc in docs_vini:
+            if vino == doc.id:
+              q_iniziale = doc.to_dict()['quant']
+              db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
 
-            reso_nome = selected[0]['Nome ordine']
-            db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_nome,'data': str(date.today()),'reso': dict_resi})
-
-        # for vino in vini_resi:
-            for doc in docs_vini:
-              if vino == doc.id:
-                q_iniziale = doc.to_dict()['quant']
-                db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
-
-            col2.success('Reso registrato con successo')
-            time.sleep(1)
-            st.experimental_rerun()
+          col2.success('Reso registrato con successo')
+          time.sleep(1)
+          st.experimental_rerun()
     
     else:
       col2.warning('⚠️ Selezionare un ordine per effetuare un reso')
