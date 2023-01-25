@@ -156,32 +156,32 @@ with tab2:
       if vini_resi and vini_resi !=[]:
         dict_resi = {}
         for vino in vini_resi:
-          q_ord = vini_ordinato_dic[vino][0]
-          st.write(q_ord)
           q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
-
-          if q_reso and q_reso > q_ord:
-            col2.warning('⚠️ Quantità da rendere non disponibile')
-          elif q_reso and q_reso <= q_ord:
-            dict_resi[vino] = q_reso
 
       aggiorna_reso = col2.button('Registra reso')
 
       docs_vini = db.collection(u'vini').stream()
 
       if aggiorna_reso:
-        reso_nome = selected[0]['Nome ordine']
-        db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_nome,'data': str(date.today()),'reso': dict_resi})
-
         for vino in vini_resi:
-          for doc in docs_vini:
-            if vino == doc.id:
-              q_iniziale = doc.to_dict()['quant']
-              db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
+          if vini_ordinato_dic[vino][0] < dict_resi[vino]:
+            col2.warning('⚠️ Quantità da rendere non disponibile')
+          
+          else:
 
-        col2.success('Reso registrato con successo')
-        time.sleep(1)
-        st.experimental_rerun()
+
+            reso_nome = selected[0]['Nome ordine']
+            db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_nome,'data': str(date.today()),'reso': dict_resi})
+
+        # for vino in vini_resi:
+            for doc in docs_vini:
+              if vino == doc.id:
+                q_iniziale = doc.to_dict()['quant']
+                db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
+
+            col2.success('Reso registrato con successo')
+            time.sleep(1)
+            st.experimental_rerun()
     
     else:
       col2.warning('⚠️ Selezionare un ordine per effetuare un reso')
