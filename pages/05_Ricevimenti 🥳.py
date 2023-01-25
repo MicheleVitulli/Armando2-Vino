@@ -164,7 +164,7 @@ with tab2:
 
       if aggiorna_reso:
         for vino in vini_resi:
-          st.write(vini_ordinato_dic[vino][0], dict_resi[vino][0])
+          st.write(vini_ordinato_dic[vino], dict_resi[vino])
           if vini_ordinato_dic[vino][0] < dict_resi[vino][0]:
             col2.warning('⚠️ Quantità da rendere non disponibile')
           
