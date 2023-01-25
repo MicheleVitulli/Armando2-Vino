@@ -190,6 +190,7 @@ with tab2:
     date_ord = doc.to_dict()['data']
     reso = doc.to_dict()['reso']
     reso = sorted(reso)
+    st.write(reso)
     for i in reso:
       resi.append({"Ordine reso" : name_ord,"Data reso": date_ord,  "Vino": i , "Quantità": reso[i]}) 
 
