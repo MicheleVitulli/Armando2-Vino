@@ -23,7 +23,7 @@ st.markdown('# Versione per Le Bon Ton')
 st.markdown('## 🍷🍷🍷')
 
 
-
+st.write('Ciao lorenzo')
 st.markdown('> 🦈 ⚪️')
 
 # Tenere lontano dalla portata di bambini ed economisti.
