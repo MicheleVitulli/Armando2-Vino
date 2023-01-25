@@ -13,7 +13,7 @@ if not firebase_admin._apps:
 	firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-# --- Layout comune a tutte le pagine
+# --- Layout comune a tutte le pagine ---
 st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '📦', initial_sidebar_state = 'auto')
 hide_streamlit_style = """
             <style>
@@ -29,7 +29,7 @@ st.markdown('# <span style="color: #983C8E;">Gestione Ordini per ricevimenti</sp
 
 tab1, tab2 = st.tabs(['Registrazione ordini per ricevimenti', 'Gestione degli ordini per ricevimenti'])
 
-
+# --- Pagina per l'inserimento di ordini relativi a eventi e ricevimenti ---
 with tab1:
 
   docs_vini = db.collection(u'vini').stream()
@@ -49,24 +49,26 @@ with tab1:
   option = st.multiselect('Seleziona uno o più vini', prodotti)
 
 
-  # --- Selezione del prodotto ---
+  # selezione del prodotto con comparsa iterativa di widget come il number input q_vino
   dict_vino = {}
   if option and option != '':
     for vino in option:
       info = vino.split('-')
       query = db.collection(u'vini').where(u'nome', u'==', info[0]).where('annata', '==', info[1])
-      docs = query.stream()
-      for doc in docs:
-        nome = doc.to_dict()['nome']
-        annata = doc.to_dict()['annata']
-        prezzo_vg = doc.to_dict()['prezzo_vg']
-        prezzo_a = doc.to_dict()['prezzo_a']
-        prezzo_vp = doc.to_dict()['prezzo_vp']
-        quant = doc.to_dict()['quant']
+      query = db.collection(u'vini').document(vino).get()
+      # docs = query.stream()
+      # for doc in docs:
+        # nome = doc.to_dict()['nome']
+        # annata = doc.to_dict()['annata']
+        # prezzo_vg = doc.to_dict()['prezzo_vg']
+        # prezzo_a = doc.to_dict()['prezzo_a']
+        # prezzo_vp = doc.to_dict()['prezzo_vp']
+      quant = query.to_dict()['quant']
 
-      q_vino = st.number_input('Quante bottiglie di {}'.format(' '.join(vino.split('-'))), key=str(vino), step=1, min_value=0)
+      q_ord = st.number_input('Quante bottiglie di {}'.format(' '.join(vino.split('-'))), key=str(vino), step=1, min_value=0)
 
-      dict_vino[vino]=[quant, q_vino]
+      # creazione di un dizionario con le chiavi che sono i vini ordinati, i valori sono q in magazzino e q ordinata
+      dict_vino[vino]=[quant, q_ord]
 
 
   ordine = st.button('Registra ordine per ricevimento')
@@ -179,31 +181,26 @@ with tab2:
           reso_nome = selected[0]['Nome ordine']
           db.collection(u'resi_ordini').document(reso_id).set({'nome': reso_nome,'data': str(date.today()),'reso': dict_resi})
 
-      # for vino in vini_resi:
-          for doc in docs_vini:
-            if vino == doc.id:
-              q_iniziale = doc.to_dict()['quant']
-              db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
+          for vino in vini_resi:
+            for doc in docs_vini:
+              if vino == doc.id:
+                q_iniziale = doc.to_dict()['quant']
+                db.collection(u'vini').document(vino).update({'quant': q_iniziale + dict_resi[vino]})
 
-          col2.success('Reso registrato con successo')
-          time.sleep(1)
-          st.experimental_rerun()
+            col2.success('Reso registrato con successo')
+            time.sleep(1)
+            st.experimental_rerun()
     
     else:
       col2.warning('⚠️ Selezionare un ordine per effetuare un reso')
 
 # --- Resi ---
-
   doc_ref = db.collection(u"resi_ordini")
   docs_resi = doc_ref.stream()
 
   resi = []
   for doc in docs_resi:
-    # name_ord = doc.to_dict()['nome']
-    # date_ord = doc.to_dict()['data']
     reso = doc.to_dict()['reso']
-    # reso = sorted(reso)
-    # st.write(reso)
     for i in reso:
       resi.append({"Ordine reso" : doc.to_dict()['nome'],"Data reso": doc.to_dict()['data'],  "Vino": i , "Quantità": reso[i]}) 
 
