@@ -153,9 +153,10 @@ with tab2:
       #     ordine = doc.to_dict()['ordinato']
       #     prodotti = ordine.keys()
 
-      query = db.collection(u'ordini').document(reso_id).to_dict()['ordinato']
-      st.write(query)
-      prodotti = query.keys()
+      query = db.collection(u'ordini').document(reso_id)
+      vini_ordinato = query.to_dict()['ordinato']
+      st.write(vini_ordinato)
+      prodotti = vini_ordinato.keys() 
 
       vini_resi = col2.multiselect('Scegli il prodotto da rendere', prodotti)
 
