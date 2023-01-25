@@ -25,7 +25,7 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 st.markdown('📦 Armando 2.0')
 
-st.markdown('# <span style="color: #983C8E;">Gestione Ordini per ricevimenti</span>', unsafe_allow_html=True)
+st.markdown('# <span style="color: #983C8E;">Gestione degli ordini per eventi e ricevimenti</span>', unsafe_allow_html=True)
 
 tab1, tab2 = st.tabs(['Registrazione ordini per ricevimenti', 'Gestione degli ordini per ricevimenti'])
 
