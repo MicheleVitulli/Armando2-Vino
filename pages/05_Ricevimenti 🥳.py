@@ -169,7 +169,8 @@ with tab2:
           st.write( vini_ordinato_dic[vino][0], dict_resi[vino])
           if vini_ordinato_dic[vino][0] < dict_resi[vino]:
             controllo_q_resi = controllo_q_resi
-          controllo_q_resi += 1
+          else:
+            controllo_q_resi += 1
         
         if controllo_q_resi != len(vini_resi):
             col2.warning('⚠️ Quantità da rendere non disponibile')
