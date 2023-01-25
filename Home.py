@@ -18,8 +18,24 @@ hide_streamlit_style = """
             </style>
             """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+def add_bg_from_url():
+        st.markdown(
+            f"""
+            <style>
+            .stApp {{
+                background-image: url("https://www.olioevinilenardon.it/wp-content/uploads/2022/07/AdobeStock_283777992.jpeg");
+                background-attachment: fixed;
+                background-size: cover
+            }}
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
+add_bg_from_url()
 st.markdown('## 🍷🍷🍷')
-st.markdown('# Versione per Le Bon Ton')
+st.markdown('# <span style="color: #983C8E;">Versione per Le Bon Ton</span>', unsafe_allow_html=True)
 st.markdown('## 🍷🍷🍷')
 
 
