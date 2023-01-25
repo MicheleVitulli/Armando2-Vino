@@ -158,8 +158,8 @@ with tab2:
       if vini_resi and vini_resi !=[]:
         dict_resi = {}
         for vino in vini_resi:
-          q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
-          dict_resi[vino] = [q_reso]
+          dict_resi[vino] = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
+          # dict_resi[vino] = q_reso
 
       aggiorna_reso = col2.button('Registra reso')
 
@@ -168,8 +168,8 @@ with tab2:
       if aggiorna_reso:
         controllo_q_resi = 0
         for vino in vini_resi:
-          st.write( vini_ordinato_dic[vino][0], dict_resi[vino][0])
-          if vini_ordinato_dic[vino][0] < dict_resi[vino][0]:
+          st.write( vini_ordinato_dic[vino][0], dict_resi[vino])
+          if vini_ordinato_dic[vino][0] < dict_resi[vino]:
             controllo_q_resi = controllo_q_resi
           else:
             controllo_q_resi += 1
