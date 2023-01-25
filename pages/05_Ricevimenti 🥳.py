@@ -176,6 +176,9 @@ with tab2:
         col2.success('Reso registrato con successo')
         time.sleep(1)
         st.experimental_rerun()
+    
+    else:
+      col2.warning('⚠️ Selezionare un ordine per effetuare un reso')
 
 # --- Resi ---
 
