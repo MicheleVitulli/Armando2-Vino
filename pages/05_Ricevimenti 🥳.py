@@ -111,7 +111,7 @@ with tab2:
 
     vini_ord = ''   
     for i in lista_vini:
-      vini_ord += str(i) + ' = ' + str(ordinato[i][0]) + ';  '
+      vini_ord += str(i) + ' = ' + str(ordinato[i][0]) + ';   '
 
 
     ordini.append({'Nome ordine': doc.to_dict()['nome ordine'], 'Data evento':doc.to_dict()['data evento'], 'Vini ordinati': vini_ord}) 
@@ -135,12 +135,11 @@ with tab2:
       if selected == []:
         st.warning('⚠️ Seleziona almeno un ordine')
       else:
-        for dictionary in selected:
           ord_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
           db.collection(u'ordini').document(ord_id).delete()
-        st.success(f'Eliminazione avvenuta')
-        time.sleep(1)
-        st.experimental_rerun()
+          st.success(f'Eliminazione avvenuta')
+          time.sleep(1)
+          st.experimental_rerun()
 
     
     docs_ordini = db.collection('ordini').stream()
@@ -154,10 +153,11 @@ with tab2:
 
       vini_resi = col2.multiselect('Scegli il prodotto da rendere', vini_ordinato)
 
-      dict_resi = {}
-      for vino in vini_resi:
-        q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
-        dict_resi[vino] = q_reso
+      if vini_resi and vini_resi !=[]:
+        dict_resi = {}
+        for vino in vini_resi:
+          q_reso = col2.number_input('Quantità di reso di {}'.format(' '.join(vino.split('-'))), key=str(vino), min_value=0, step=1)
+          dict_resi[vino] = q_reso
 
       aggiorna_reso = col2.button('Registra reso')
 
