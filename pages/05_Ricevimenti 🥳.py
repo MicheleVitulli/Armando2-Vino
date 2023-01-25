@@ -162,8 +162,8 @@ with tab2:
 
           if q_reso and q_reso > q_ord:
             col2.warning('⚠️ Quantità da rendere non disponibile')
-          # elif q_reso and q_reso <= q_ord:
-          #   dict_resi[vino] = q_reso
+          elif q_reso and q_reso <= q_ord:
+            dict_resi[vino] = q_reso
 
       aggiorna_reso = col2.button('Registra reso')
 
