@@ -35,7 +35,7 @@ st.markdown('# <span style="color: #983C8E;">Grafici</span>', unsafe_allow_html=
 
 option = st.selectbox(
     'Seleziona la categoria',
-    ('Pagina principale', 'Grafici vendite generali', 'Grafici ricevimenti'))
+    (' ', 'Vendite', 'Ricevimenti'))
 
 
 if option == "Pagina principale":
