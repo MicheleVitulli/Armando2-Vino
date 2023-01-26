@@ -147,9 +147,9 @@ if option == "Vendite":
 		len1 = int(len(vino_privato))
 		vp = vino_privato[2:]
 		if ',' in vp:
-			st.markdown(f'### I vini più venduti a privati sono: {vp}')
+			st.markdown(f'\n ### I vini più venduti a privati sono: {vp}')
 		else:
-			st.caption(f'### Il vino più venduto a privati è: {vp}')
+			st.caption(f'\n ### Il vino più venduto a privati è: {vp}')
 		
 		len2 = int(len(vino_grossista))
 		vg = vino_grossista[2:]
