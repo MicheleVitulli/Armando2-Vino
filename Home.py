@@ -10,7 +10,7 @@ if not firebase_admin._apps:
 db = firestore.client()
 
 
-st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '📦', initial_sidebar_state = 'auto')
+st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
 hide_streamlit_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -34,10 +34,7 @@ def add_bg_from_url():
         )
 
 add_bg_from_url()
-st.markdown('## 🍷🍷🍷')
-st.markdown('# <span style="color: #ffffff;">Armando per Le Bon Ton</span>', unsafe_allow_html=True)
-st.markdown('## 🍷🍷🍷')
+st.markdown('# Armando per Le Bon Ton')
 
 
 
-st.markdown('> 🦈 ⚪️')
