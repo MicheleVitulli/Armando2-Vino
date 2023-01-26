@@ -35,7 +35,7 @@ def add_bg_from_url():
 
 add_bg_from_url()
 
-st.markdown('# <span style="color:  #FFFFFF;">Versione per Le Bon Ton</span>', unsafe_allow_html=True)
+st.markdown('# <span style="color:  #FFFFFF;">Armando per Le Bon Ton</span>', unsafe_allow_html=True)
 
 
 
