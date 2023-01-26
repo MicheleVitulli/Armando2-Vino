@@ -34,14 +34,14 @@ st.markdown('# <span style="color: #983C8E;">Grafici</span>', unsafe_allow_html=
 
 
 option = st.selectbox(
-    'Qui potri visualizzasre tutti i grafici, seleziona la categoria',
+    'Seleziona la categoria',
     ('Pagina principale', 'Grafici vendite generali', 'Grafici ricevimenti'))
 
 
 if option == "Pagina principale":
 	pass
 
-if option == "Grafici vendite generali":
+if option == "Vendite":
 	st.header("Grafici vendite a grossisti e privati 📈")
 	current_month = datetime.now().strftime("%m")
 	current_year =  datetime.now().strftime("%Y")
@@ -282,7 +282,7 @@ if option == "Grafici vendite generali":
 
 
 
-if option == "Grafici ricevimenti":
+if option == "Ricevimenti":
 	st.header("Grafici ricevimenti 📉")
 	current_month = datetime.now().strftime("%m")
 	current_year =  datetime.now().strftime("%Y")
