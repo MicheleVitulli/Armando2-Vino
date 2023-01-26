@@ -91,8 +91,8 @@ if option == "Vendite":
 		#--------------vino più venduto----------------
 		doc_refg = db.collection("vendite")
 		docsg = doc_ref.stream()
-		new_datagg = {'prodotti': [], 'quantità': []}
-		new_datagp = {'prodotti': [], 'quantità': []}
+		new_datagg = {'prodotti': [], 'quantità': []} #lista vini grossista
+		new_datagp = {'prodotti': [], 'quantità': []} #lista vini privato
 		vino_grossista = ''
 		vino_privato = ''
 		for doc in docsg:
@@ -144,7 +144,6 @@ if option == "Vendite":
 				vino_privato = vino_privato + ", " + (new_datagp['prodotti'][t])
 
 
-		len1 = int(len(vino_privato))
 		vp = vino_privato[2:]
 		st.markdown('---')
 		if ',' in vp:
@@ -152,7 +151,6 @@ if option == "Vendite":
 		else:
 			st.markdown(f'- Il vino più venduto a privati è: {vp}')
 		
-		len2 = int(len(vino_grossista))
 		vg = vino_grossista[2:]
 		if ',' in vg:
 			st.markdown(f'- I vini più venduti a grossisti sono: {vg}')
@@ -199,7 +197,122 @@ if option == "Vendite":
 
 	#---------------------------RESI e RICAVI------------------------------------
 	with col2:
+		st.markdown('# <span style="color: #983C8E;">Grafico dei resi</span>', unsafe_allow_html=True)
+		doc_ref4 = db.collection("vendite")
+		docs4 = doc_ref.stream()
+		new_data4 = {'prodotti': [], 'quantità': []}
+
+		for doc in docs4:
+			#'reso': str(new_quant) + ';' + datetime.now().strftime("%Y-%m-%d")
+			nome = doc.to_dict()['nome']
+			quant = doc.to_dict()['quant']
+			res = doc.to_dict()['reso']
+			res_quant = res.split(';', 1)[0]
+			temp1 = res.split(';', 1)[-1]
+			temp2 = temp1.split('-')
+			anno = temp2[0]
+
+			if anno != '' and res != '':
+				mese = temp2[1]
+				if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno):
+					if not nome in new_data4['prodotti']:
+						new_data4['prodotti'].append(nome)
+						new_data4['quantità'].append(int(res_quant))
+						
+					else:
+						pos = 0
+						for i in range(len(new_data4['prodotti'])):
+							if nome == new_data4['prodotti'][i]:
+								pos = i
+						temp = int(new_data4['quantità'][pos])
+						new_quant = temp + int(res_quant)
+						new_data4['quantità'][pos] = new_quant
+
+		plt.rcdefaults()
+		fig4, ax = plt.subplots()
+		ax.barh(new_data4['prodotti'], new_data4['quantità'], color = "#983C8E")
+		ax.set_xlabel('quantità')
+		ax.invert_yaxis()
+		plt.grid(axis = 'x', linestyle = '--', linewidth = 0.5)
+		st.pyplot(fig4)
+
+		#--------------------------vino più reso----------------
+		doc_ref5 = db.collection("vendite")
+		docs5 = doc_ref.stream()
+		new_datarg = {'prodotti': [], 'quantità': []} #lista vini grossista
+		new_datarp = {'prodotti': [], 'quantità': []} #lista vini privato
+		vino_privato = ''
+		vino_grossista = ''
+		for doc in docs5:
+			nome = doc.to_dict()['nome']
+			quant = doc.to_dict()['quant']
+			res = doc.to_dict()['reso']
+			res_quant = res.split(';', 1)[0]
+			print("questi sono i res", res_quant)
+			temp1 = res.split(';', 1)[-1]
+			temp2 = temp1.split('-')
+			anno = temp2[0]
+			acq = doc.to_dict()['acquirente']
+
+			if anno != '' and res != '':
+				mese = temp2[1]
+				if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno) and 'Grossista' == str(acq):
+					if not nome in new_datarg['prodotti']:
+						new_datarg['prodotti'].append(nome)
+						new_datarg['quantità'].append(int(res_quant))
+						
+					else:
+						pos = 0
+						for i in range(len(new_datarg['prodotti'])):
+							if nome == new_datarg['prodotti'][i]:
+								pos = i
+						temp = int(new_datarg['quantità'][pos])
+						new_quant = temp + int(res_quant)
+						new_datarg['quantità'][pos] = new_quant
+
+				if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno) and 'Privato' == str(acq):
+					if not nome in new_datarp['prodotti']:
+						new_datarp['prodotti'].append(nome)
+						new_datarp['quantità'].append(int(res_quant))
+						
+					else:
+						pos = 0
+						for i in range(len(new_datarp['prodotti'])):
+							if nome == new_datarp['prodotti'][i]:
+								pos = i
+						temp = int(new_datarp['quantità'][pos])
+						new_quant = temp + int(res_quant)
+						new_datarp['quantità'][pos] = new_quant								
+
+		max_quant = max(new_datarg['quantità'])
+		for t in range(len(new_datarg['quantità'])):
+			gg = new_datarg['quantità'][t]
+			if gg == max_quant:
+				vino_grossista = vino_grossista + ", " + (new_datarg['prodotti'][t])
+
+		max_quant = max(new_datarp['quantità'])
+		for t in range(len(new_datarp['quantità'])):
+			gg = new_datarp['quantità'][t]
+			if gg == max_quant:
+				vino_privato = vino_privato + ", " + (new_datagp['prodotti'][t])
+
+
+		vp = vino_privato[2:]
+		st.markdown('---')
+		if ',' in vp:
+			st.markdown(f'- I vini più resi da privati sono: {vp}')
+		else:
+			st.markdown(f'- Il vino più reso da privati è: {vp}')
 		
+		vg = vino_grossista[2:]
+		if ',' in vg:
+			st.markdown(f'- I vini più resi da grossisti sono: {vg}')
+		else:
+			st.markdown(f'- Il vino più reso da grossisti è: {vg}')
+		
+
+
+
 		st.markdown('# <span style="color: #983C8E;">Grafico dei ricavi</span>', unsafe_allow_html=True)
 		doc_ref2 = db.collection("vendite")
 		docs2 = doc_ref.stream()
