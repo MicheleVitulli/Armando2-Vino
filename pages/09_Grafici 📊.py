@@ -426,7 +426,6 @@ if option == "Ricevimenti":
 					nome_vino = i.split('-')[0]
 					if nome_vino not in new_data['prodotti']:
 						new_data['prodotti'].append(nome_vino)
-						print("reso", reso[i])
 						new_data['quantità'].append(int(reso[i]))
 					
 					else:
