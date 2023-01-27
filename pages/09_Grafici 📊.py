@@ -1,17 +1,12 @@
-
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 from datetime import datetime, date, timedelta
 from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
-import pandas as pd
 import time
-import random
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
-import numpy as np
-import operator
 
 if not firebase_admin._apps:
 	cred = credentials.Certificate('firestore-key.json')
@@ -130,32 +125,41 @@ if option == "Vendite":
 					temp = new_datagp['quantità'][pos]
 					new_quant = temp + quant
 					new_datagp['quantità'][pos] = new_quant
-		
-		max_quant = max(new_datagg['quantità'])
-		for t in range(len(new_datagg['quantità'])):
-			gg = new_datagg['quantità'][t]
-			if gg == max_quant:
-				vino_grossista = vino_grossista + ", " + (new_datagg['prodotti'][t])
-
-		max_quant = max(new_datagp['quantità'])
-		for t in range(len(new_datagp['quantità'])):
-			gg = new_datagp['quantità'][t]
-			if gg == max_quant:
-				vino_privato = vino_privato + ", " + (new_datagp['prodotti'][t])
 
 
-		vp = vino_privato[2:]
 		st.markdown('---')
-		if ',' in vp:
-			st.markdown(f'- I vini più venduti a privati sono: {vp}')
-		else:
-			st.markdown(f'- Il vino più venduto a privati è: {vp}')
+		if new_datagp['quantità'] != []:
+			max_quant = max(new_datagp['quantità'])
+			for t in range(len(new_datagp['quantità'])):
+				gg = new_datagp['quantità'][t]
+				if gg == max_quant:
+					vino_privato = vino_privato + ", " + (new_datagp['prodotti'][t])
+			
+			vp = vino_privato[2:]
+			if ',' in vp:
+				st.markdown(f'- I vini più venduti a privati sono: {vp}')
+			else:
+				st.markdown(f'- Il vino più venduto a privati è: {vp}')
 		
-		vg = vino_grossista[2:]
-		if ',' in vg:
-			st.markdown(f'- I vini più venduti a grossisti sono: {vg}')
-		else:
-			st.markdown(f'- Il vino più venduto a grossisti è: {vg}')
+		if new_datagp['quantità'] == []:
+			st.markdown(f'- Non sono stati venduti vini a privati')
+
+		if new_datagg ['quantità'] != []:
+			max_quant = max(new_datagg['quantità'])
+			for t in range(len(new_datagg['quantità'])):
+				gg = new_datagg['quantità'][t]
+				if gg == max_quant:
+					vino_grossista = vino_grossista + ", " + (new_datagg['prodotti'][t])
+			
+			vg = vino_grossista[2:]
+			if ',' in vg:
+				st.markdown(f'- I vini più venduti a grossisti sono: {vg}')
+			else:
+				st.markdown(f'- Il vino più venduto a grossisti è: {vg}')
+		
+		if new_datagg['quantità'] == []:
+			st.markdown(f'- Non sono stati venduti vini a grossisti')		
+
 
 
 
@@ -248,7 +252,6 @@ if option == "Vendite":
 			quant = doc.to_dict()['quant']
 			res = doc.to_dict()['reso']
 			res_quant = res.split(';', 1)[0]
-			print("questi sono i res", res_quant)
 			temp1 = res.split(';', 1)[-1]
 			temp2 = temp1.split('-')
 			anno = temp2[0]
@@ -282,34 +285,44 @@ if option == "Vendite":
 								pos = i
 						temp = int(new_datarp['quantità'][pos])
 						new_quant = temp + int(res_quant)
-						new_datarp['quantità'][pos] = new_quant								
-
-		max_quant = max(new_datarg['quantità'])
-		for t in range(len(new_datarg['quantità'])):
-			gg = new_datarg['quantità'][t]
-			if gg == max_quant:
-				vino_grossista = vino_grossista + ", " + (new_datarg['prodotti'][t])
-
-		max_quant = max(new_datarp['quantità'])
-		for t in range(len(new_datarp['quantità'])):
-			gg = new_datarp['quantità'][t]
-			if gg == max_quant:
-				vino_privato = vino_privato + ", " + (new_datagp['prodotti'][t])
+						new_datarp['quantità'][pos] = new_quant
 
 
-		vp = vino_privato[2:]
 		st.markdown('---')
-		if ',' in vp:
-			st.markdown(f'- I vini più resi da privati sono: {vp}')
-		else:
-			st.markdown(f'- Il vino più reso da privati è: {vp}')
+
+		if new_datarp['quantità'] != []:
+			max_quant = max(new_datarp['quantità'])
+			for t in range(len(new_datarp['quantità'])):
+				gg = new_datarp['quantità'][t]
+				if gg == max_quant:
+					vino_privato = vino_privato + ", " + (new_datarp['prodotti'][t])
+
+			vp = vino_privato[2:]
+			if ',' in vp:
+				st.markdown(f'- I vini più resi da privati sono: {vp}')
+			else:
+				st.markdown(f'- Il vino più reso da privati è: {vp}')
+
+		if new_datarp['quantità'] == []:
+			st.markdown(f'- Non sono stati resi vini da privati')
+
+		if new_datarg['quantità'] != []:
+			max_quant = max(new_datarg['quantità'])
+			for t in range(len(new_datarg['quantità'])):
+				gg = new_datarg['quantità'][t]
+				if gg == max_quant:
+					vino_grossista = vino_grossista + ", " + (new_datarg['prodotti'][t])
+			
+			vg = vino_grossista[2:]
+			if ',' in vg:
+				st.markdown(f'- I vini più resi da grossisti sono: {vg}')
+			else:
+				st.markdown(f'- Il vino più reso da grossisti è: {vg}')
 		
-		vg = vino_grossista[2:]
-		if ',' in vg:
-			st.markdown(f'- I vini più resi da grossisti sono: {vg}')
 		else:
-			st.markdown(f'- Il vino più reso da grossisti è: {vg}')
-		
+			st.markdown(f'- Non sono stati resi vini da grossisti')
+
+
 
 
 
@@ -347,54 +360,6 @@ if option == "Vendite":
 		plt.grid(axis = 'x', linestyle = '--', linewidth = 0.5)
 		st.pyplot(fig2)
 		
-		
-#--------------------PROVA-----------------------
-	#st.markdown('# <span style="color: #983C8E;">Grafico dei guadagni</span>', unsafe_allow_html=True)
-	doc_ref2 = db.collection("vendite")
-	docs2 = doc_ref.stream()
-	new_data2 = {'prodotti': [], 'guadagni': []}
-	for doc in docs2:
-		nome = doc.to_dict()['nome']
-		guadagno = doc.to_dict()['guadagno']
-		data = doc.to_dict()['data']
-		mese = data.split('/')[1]
-		anno = data.split('/')[2][0:4]
-		
-		if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno):
-			if not nome in new_data2['prodotti']:
-				new_data2['prodotti'].append(nome)
-				new_data2['guadagni'].append(guadagno)
-			
-			else:
-				pos = 0
-				for i in range(len(new_data2['prodotti'])):
-					if nome == new_data2['prodotti'][i]:
-						pos = i
-				temp = new_data2['guadagni'][pos]
-				new_guadagno = temp + guadagno
-				new_data2['guadagni'][pos] = new_guadagno
-
-	plt.rcdefaults()
-	fig3, ax3 = plt.subplots()
-	ax3.barh(new_data2['prodotti'], new_data2['guadagni'], color = "#983C8E")
-	ax3.invert_yaxis()
-	ax3.set_xlabel('guadagno in euro')
-	plt.grid(axis = 'x', linestyle = '--', linewidth = 0.5)
-	
-
-	major_ticks_top=np.linspace(0,1000,5)
-	minor_ticks_top=np.linspace(0,1000,10)
-	ax3.set_xticks(major_ticks_top)
-	ax3.set_xticks(minor_ticks_top,minor=True)
-	ax3.set_title("Subplot 1")
-	ax3.grid(which="major",alpha=0.6)
-	ax3.grid(which="minor",alpha=0.3)
-	#st.pyplot(fig3)
-#-------------------FINE PROVA----------------------------
-
-
-
-
 
 if option == "Ricevimenti":
 	st.header("Grafici ricevimenti 📉")
@@ -406,5 +371,79 @@ if option == "Ricevimenti":
 	sel_anno = st.number_input('Seleziona anno di riferimento', step=1, min_value=2000, max_value=int(current_year), value=int(current_year))
 	doc_ref = db.collection("vendite")
 	docs = doc_ref.stream()
+	
+	col1, col2 = st.columns(2)
+	#--------------USCITE------------------
+	with col1:
+		st.markdown('# <span style="color: #983C8E;">Grafico delle uscite</span>', unsafe_allow_html=True)
+		doc_ref = db.collection("ordini")
+		docs = doc_ref.stream()
+		new_data = {'prodotti': [], 'quantità': []}
+		for doc in docs:
+			data = doc.to_dict()['data evento']
+			mese = data.split('-')[1]
+			anno = data.split('-')[0]
+			temp = doc.to_dict()['ordinato']
+			if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno):
+				for i in temp:
+					nome_vino = i.split('-')[0]
+					if nome_vino not in new_data['prodotti']:
+						new_data['prodotti'].append(nome_vino)
+						new_data['quantità'].append(int(temp[i][0]))
+					
+					else:
+						pos = 0
+						for g in range(len(new_data['prodotti'])):
+							if nome_vino == new_data['prodotti'][g]:
+								pos = g
+						temp1 = int(new_data['quantità'][pos])
+						new_quant = temp1 + int(temp[i][0])
+						new_data['quantità'][pos] = new_quant
+
+		plt.rcdefaults()		
+		fig, ax = plt.subplots()
+		ax.barh(new_data['prodotti'], new_data['quantità'],  color = "#983C8E")
+		ax.set_xlabel('quantità')
+		ax.invert_yaxis()
+		plt.grid(axis = 'x', linestyle = '--', linewidth = 0.5)
+		st.pyplot(fig)	
+
+
+
+	#--------------RESI--------------------
+	with col2:
+		st.markdown('# <span style="color: #983C8E;">Grafico dei resi</span>', unsafe_allow_html=True)
+		doc_ref = db.collection("resi_ordini")
+		docs = doc_ref.stream()
+		new_data = {'prodotti': [], 'quantità': []}
+		for doc in docs:
+			reso = doc.to_dict()['reso']
+			data = doc.to_dict()['data']
+			mese = data.split('-')[1]
+			anno = data.split('-')[0]
+			if str(int(mese)) == str(sel_mese) and str(int(anno)) == str(sel_anno):
+				for i in reso:
+					nome_vino = i.split('-')[0]
+					if nome_vino not in new_data['prodotti']:
+						new_data['prodotti'].append(nome_vino)
+						print("reso", reso[i])
+						new_data['quantità'].append(int(reso[i]))
+					
+					else:
+						pos = 0
+						for g in range(len(new_data['prodotti'])):
+							if nome_vino == new_data['prodotti'][g]:
+								pos = g
+						temp = int(new_data['quantità'][pos])
+						new_quant = temp + int(reso[i])
+						new_data['quantità'][pos] = new_quant
+
+		plt.rcdefaults()		
+		fig, ax = plt.subplots()
+		ax.barh(new_data['prodotti'], new_data['quantità'],  color = "#983C8E")
+		ax.set_xlabel('quantità')
+		ax.invert_yaxis()
+		plt.grid(axis = 'x', linestyle = '--', linewidth = 0.5)
+		st.pyplot(fig)	
 
 
