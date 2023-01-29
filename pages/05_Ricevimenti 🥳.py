@@ -6,6 +6,7 @@ from datetime import datetime, date, timedelta
 from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
 import pandas as pd
 import time
+from functions import check_password
 
 # --- Importazione firebase, necessario if per evitare errore streamlit ---
 if not firebase_admin._apps:

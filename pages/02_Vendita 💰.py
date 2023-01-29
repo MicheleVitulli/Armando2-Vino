@@ -5,6 +5,7 @@ from firebase_admin import firestore
 from datetime import datetime, date
 import time
 from zoneinfo import ZoneInfo
+from functions import check_password
 
 
 # --- Importazione firebase, necessario if per evitare errore streamlit ---

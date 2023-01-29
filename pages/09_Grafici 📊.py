@@ -7,6 +7,7 @@ from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
 import time
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
+from functions import check_password
 
 if not firebase_admin._apps:
 	cred = credentials.Certificate('firestore-key.json')
