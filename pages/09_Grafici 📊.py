@@ -8,6 +8,15 @@ import time
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 from functions import check_password
+# --- Layout comune a tutte le pagine
+st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
+hide_streamlit_style = """
+	            <style>
+	            #MainMenu {visibility: hidden;}
+	            footer {visibility: hidden;}
+	            </style>
+	            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 if check_password():
 
 	if not firebase_admin._apps:
@@ -15,16 +24,7 @@ if check_password():
 		firebase_admin.initialize_app(cred)
 	db = firestore.client()
 
-	st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
-	hide_streamlit_style = """
-	            <style>
-	            #MainMenu {visibility: hidden;}
-	            footer {visibility: hidden;}
-	            </style>
-	            """
-	st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
-	st.markdown('📦 Armando 2.0')
+	
 
 	st.markdown('# <span style="color: #983C8E;">Grafici</span>', unsafe_allow_html=True)
 

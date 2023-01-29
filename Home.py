@@ -12,16 +12,18 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-if check_password():
-    st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
-    hide_streamlit_style = """
+st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
+hide_streamlit_style = """
                 <style>
                 #MainMenu {visibility: hidden;}
                 footer {visibility: hidden;}
                 </style>
                 """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+
+
+if check_password():
     def add_bg_from_url():
             st.markdown(
                 f"""
@@ -37,6 +39,7 @@ if check_password():
             )
 
     add_bg_from_url()
+    
 
     st.markdown('# <span style="color:  #FFFFFF;">Armando per Le Bon Ton</span>', unsafe_allow_html=True)
 

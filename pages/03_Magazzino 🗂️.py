@@ -9,6 +9,16 @@ import pandas as pd
 import time
 from functions import check_password
 
+# --- Layout comune a tutte le pagine
+st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
+hide_streamlit_style = """
+	            <style>
+	            #MainMenu {visibility: hidden;}
+	            footer {visibility: hidden;}
+	            </style>
+	            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 if check_password():
 
 	# --- Importazione firebase, necessario if per evitare errore streamlit ---
@@ -17,17 +27,7 @@ if check_password():
 		firebase_admin.initialize_app(cred)
 	db = firestore.client()
 
-	# --- Layout comune a tutte le pagine
-	st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
-	hide_streamlit_style = """
-	            <style>
-	            #MainMenu {visibility: hidden;}
-	            footer {visibility: hidden;}
-	            </style>
-	            """
-	st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
-	st.markdown('📦 Armando 2.0')
+	
 
 	# --- Prelievo dei dati dal database per poi creare la tabella ---
 	doc_ref = db.collection("vini")
