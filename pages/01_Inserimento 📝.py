@@ -30,7 +30,7 @@ if check_password():
 
 	
 
-	st.markdown('📦 Armando 2.0')
+
 	st.markdown('# <span style="color: #983C8E;">Inserisci i vini nel magazzino</span>', unsafe_allow_html=True)
 
 	# --- Inserimento campi del prodotto ---
