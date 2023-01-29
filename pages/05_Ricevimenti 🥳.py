@@ -112,6 +112,7 @@ if check_password():
 
       ordini.append({'Nome ordine': doc.to_dict()['nome ordine'], 'Data evento':doc.to_dict()['data evento'], 'Vini ordinati': vini_ord}) 
 
+    st.markdown('> Seleziona un ordine per effettuare un reso')
     if ordini != []:
       data = pd.DataFrame(ordini)
       gd = GridOptionsBuilder.from_dataframe(data)
@@ -181,8 +182,7 @@ if check_password():
               time.sleep(1)
               st.experimental_rerun()
       
-      else:
-        col2.warning('⚠️ Selezionare un ordine per effetuare un reso')
+      
 
   # --- Resi ---
     doc_ref = db.collection(u"resi_ordini")
