@@ -12,7 +12,7 @@ if not firebase_admin._apps:
     firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-st.set_page_config(page_title='Le Bon Ton', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
+st.set_page_config(page_title='Le Bon Ton', layout = 'wide', page_icon = '', initial_sidebar_state = 'auto')
 hide_streamlit_style = """
                 <style>
                 #MainMenu {visibility: hidden;}
