@@ -8,7 +8,7 @@ import pandas as pd
 import time
 from functions import check_password
 # --- Layout comune a tutte le pagine
-st.set_page_config(page_title='Armando 2.0', layout = 'wide', page_icon = '🍷', initial_sidebar_state = 'auto')
+st.set_page_config(page_title='Le Bon Ton', layout = 'wide', page_icon = '', initial_sidebar_state = 'auto')
 hide_streamlit_style = """
               <style>
               #MainMenu {visibility: hidden;}
