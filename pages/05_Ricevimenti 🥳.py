@@ -127,16 +127,7 @@ if check_password():
 
       col1, col2 = st.columns(2)
 
-      elimina_selezionati = col1.button('Elimina ordine selezionato')
-      if elimina_selezionati:
-        if selected == []:
-          st.warning('⚠️ Seleziona almeno un ordine')
-        else:
-            ord_id = selected[0]['Nome ordine'] + selected[0]['Data evento']
-            db.collection(u'ordini').document(ord_id).delete()
-            st.success(f'Eliminazione avvenuta')
-            time.sleep(1)
-            st.experimental_rerun()
+      
 
       
       docs_ordini = db.collection('ordini').stream()
